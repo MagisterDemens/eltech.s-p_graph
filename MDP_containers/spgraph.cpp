@@ -27,18 +27,59 @@ SPGraph<T>::SPGraph(T &firstData, T &lastData)
 template<typename T>
 void SPGraph<T>::SSPlit(SPVertex<T> *vertex, T &data)
 {
+    SPVertex* new_vertex = new SPVertex(data);
+
+    int pos = std::find(vertexes.begin(), vertexes.end(), vertex);
+
+    if(pos == vertexes.size()){
+        //exeption
+        return;
+    }
+
+    std::list<SPVertex<T>*> temp_output = vertex->getOutputs();
+    vertex->clearBonds();
+    vertex->addVertex(vertex);
+
+    vertexes.insert(pos, new_vertex);
+
+    new_vertex->addVertex(vertex, true);
+
+    for(int i = 0; i < temp_output.size(); i++){
+        new_vertex->addVertex(temp_output[i]);
+    }
 
 }
 
 template<typename T>
 void SPGraph<T>::PSPlit(SPVertex<T> *vertex, T &data)
 {
+    SPVertex* new_vertex = new SPVertex(data);
 
+    int pos = std::find(vertexes.begin(), vertexes.end(), vertex);
+
+    if(pos == vertexes.size()){
+        //exeption
+        return;
+    }
+
+    std::list<SPVertex<T>*> temp_output = vertex->getOutputs();
+    std::list<SPVertex<T>*> temp_input = vertex->getInputs();
+
+    vertexes.insert(pos, new_vertex);
+
+    for(int i = 0; i < temp_output.size(); i++){
+        new_vertex->addVertex(temp_output[i]);
+    }
+
+    for(int i = 0; i < temp_input.size(); i++){
+        new_vertex->addVertex(temp_input, true);
+    }
 }
 
 template<typename T>
 void SPGraph<T>::deleteVertex(SPVertex<T> *vertex)
 {
+
 
 }
 

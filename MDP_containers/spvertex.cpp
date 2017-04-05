@@ -40,11 +40,15 @@ void SPVertex<T>::addVertex(SPVertex<T> *vertex, bool is_input)
         return;
     }
 
-    if(is_input){
+    int pos = std::find(m_list.begin(), m_list.end(), vertex);
+
+    if(is_input && pos == m_input.size()){
         m_input.push_back(vertex);
     }
     else{
-        m_output.push_back(vertex);
+        if(!is_input && pos == m_output.size()){
+            m_output.push_back(vertex);
+        }
     }
 }
 
