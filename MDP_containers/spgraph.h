@@ -13,8 +13,8 @@ class SPGraph
 public:
     SPGraph(T &data);
     SPGraph(T &firstData, T &lastData);
-    void SSPlit(SPVertex<T>* vertex, T &data);
-    void PSPlit(SPVertex<T>* vertex, T &data);
+    SPVertex<T>* SSPlit(SPVertex<T>* vertex, T &data);
+    SPVertex<T>* PSPlit(SPVertex<T>* vertex, T &data);
     void deleteVertex(SPVertex<T>* vertex);
     ~SPGraph();
 private:

@@ -25,21 +25,22 @@ SPGraph<T>::SPGraph(T &firstData, T &lastData)
 }
 
 template<typename T>
-void SPGraph<T>::SSPlit(SPVertex<T> *vertex, T &data)
+SPVertex<T>* SPGraph<T>::SSPlit(SPVertex<T> *vertex, T &data)
 {
-    SPVertex* new_vertex = new SPVertex(data);
+    SPVertex<T>* new_vertex = new SPVertex<T>(data);
 
     int pos = std::find(vertexes.begin(), vertexes.end(), vertex);
 
-    if(pos == vertexes.size()){
+    if(pos == vertexes.end()){
         //exeption
-        return;
+        return NULL;
     }
 
     std::list<SPVertex<T>*> temp_output = vertex->getOutputs();
     vertex->clearBonds();
     vertex->addVertex(vertex);
 
+    pos--;
     vertexes.insert(pos, new_vertex);
 
     new_vertex->addVertex(vertex, true);
@@ -48,23 +49,30 @@ void SPGraph<T>::SSPlit(SPVertex<T> *vertex, T &data)
         new_vertex->addVertex(temp_output[i]);
     }
 
+    return new_vertex;
 }
 
 template<typename T>
-void SPGraph<T>::PSPlit(SPVertex<T> *vertex, T &data)
+SPVertex<T> *SPGraph<T>::PSPlit(SPVertex<T> *vertex, T &data)
 {
-    SPVertex* new_vertex = new SPVertex(data);
+    SPVertex<T>* new_vertex = new SPVertex<T>(data);
 
     int pos = std::find(vertexes.begin(), vertexes.end(), vertex);
 
-    if(pos == vertexes.size()){
+    if(pos == vertexes.end()){
         //exeption
-        return;
+        return NULL;
+    }
+
+    if(pos == vertexes.begin() || pos == vertexes.end()--){
+        //exeption
+        return NULL;
     }
 
     std::list<SPVertex<T>*> temp_output = vertex->getOutputs();
     std::list<SPVertex<T>*> temp_input = vertex->getInputs();
 
+    pos--;
     vertexes.insert(pos, new_vertex);
 
     for(int i = 0; i < temp_output.size(); i++){
@@ -72,13 +80,31 @@ void SPGraph<T>::PSPlit(SPVertex<T> *vertex, T &data)
     }
 
     for(int i = 0; i < temp_input.size(); i++){
-        new_vertex->addVertex(temp_input, true);
+        new_vertex->addVertex(temp_input[i], true);
     }
+
+    return new_vertex;
 }
 
 template<typename T>
 void SPGraph<T>::deleteVertex(SPVertex<T> *vertex)
 {
+    if(vertex == NULL){
+        //exeption
+        return;
+    }
+
+    int pos = std::find(vertexes.begin(), vertexes.end(), vertex);
+
+    if(pos == vertexes.end()){
+        //exeption
+        return;
+    }
+
+    if(pos == vertexes.begin() || vertexes.end()--){
+        //exeption
+        return;
+    }
 
 
 }

@@ -40,15 +40,11 @@ void SPVertex<T>::addVertex(SPVertex<T> *vertex, bool is_input)
         return;
     }
 
-    int pos = std::find(m_list.begin(), m_list.end(), vertex);
-
-    if(is_input && pos == m_input.size()){
-        m_input.push_back(vertex);
+    if(is_input){
+        this->addV(vertex, m_input);
     }
     else{
-        if(!is_input && pos == m_output.size()){
-            m_output.push_back(vertex);
-        }
+        this->addV(vertex, m_output);
     }
 }
 
@@ -80,6 +76,17 @@ void SPVertex<T>::clearBonds(bool is_input)
 }
 
 template<typename T>
+int SPVertex<T>::count(bool is_input)
+{
+    if(is_input){
+        return m_input.size();
+    }
+    else{
+        return m_output.size();
+    }
+}
+
+template<typename T>
 SPVertex<T>::~SPVertex()
 {
     m_input.clear();
@@ -95,4 +102,16 @@ void SPVertex<T>::deleteV(SPVertex<T> *vertex, std::list<SPVertex<T> *> m_list)
         return;
     }
     m_list.erase(pos);
+}
+
+template<typename T>
+void SPVertex<T>::addV(SPVertex<T> *vertex, std::list<SPVertex<T> *> m_list)
+{
+    int pos = std::find(m_list.begin(), m_list.end(), vertex);
+    if(pos != m_list.end()){
+        //Need exeption here
+        return;
+    }
+
+    m_list.push_back(vertex);
 }
