@@ -49,6 +49,26 @@ void SPVertex<T>::addVertex(SPVertex<T> *vertex, bool is_input)
 }
 
 template<typename T>
+void SPVertex<T>::addVertex(std::list<SPVertex<T> *> vertex, bool is_input)
+{
+    if(vertex.size() == 0){
+        //exeption
+        return;
+    }
+
+    if(is_input){
+        for(int i = 0; i < vertex.size(); i++){
+            this->addVertex(vertex[i], m_input);
+        }
+    }
+    else{
+        for(int i = 0; i < vertex.size(); i++){
+            this->addVertex(vertex[i], m_output);
+        }
+    }
+}
+
+template<typename T>
 void SPVertex<T>::deleteVertex(SPVertex<T> *vertex, bool is_input)
 {
     if(vertex == NULL){

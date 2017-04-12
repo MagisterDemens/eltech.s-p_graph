@@ -10,6 +10,9 @@ namespace spg {
 template<typename T>
 class SPGraph
 {
+    typedef std::list<SPVertex<T>*> v_list;
+    typedef SPVertex<T>* v_elem;
+
 public:
     SPGraph(T &data);
     SPGraph(T &firstData, T &lastData);

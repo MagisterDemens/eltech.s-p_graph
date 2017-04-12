@@ -17,6 +17,7 @@ public:
     std::list<SPVertex<T>*> getInputs() const;
     std::list<SPVertex<T>*> getOutputs() const;
     void addVertex(SPVertex<T>* vertex, bool is_input = false);
+    void addVertex(std::list<SPVertex<T>*> vertex, bool is_input = false);
     void deleteVertex(SPVertex<T>* vertex, bool is_input = false);
     void clearBonds(bool is_input = false);
     int count(bool is_input);

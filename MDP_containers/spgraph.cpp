@@ -27,8 +27,6 @@ SPGraph<T>::SPGraph(T &firstData, T &lastData)
 template<typename T>
 SPVertex<T>* SPGraph<T>::SSPlit(SPVertex<T> *vertex, T &data)
 {
-    SPVertex<T>* new_vertex = new SPVertex<T>(data);
-
     int pos = std::find(vertexes.begin(), vertexes.end(), vertex);
 
     if(pos == vertexes.end()){
@@ -36,18 +34,21 @@ SPVertex<T>* SPGraph<T>::SSPlit(SPVertex<T> *vertex, T &data)
         return NULL;
     }
 
+    SPVertex<T>* new_vertex = new SPVertex<T>(data);
+
     std::list<SPVertex<T>*> temp_output = vertex->getOutputs();
     vertex->clearBonds();
     vertex->addVertex(vertex);
 
-    pos--;
-    vertexes.insert(pos, new_vertex);
-
     new_vertex->addVertex(vertex, true);
-
+    new_vertex->addVertex(temp_output);
+    /*
     for(int i = 0; i < temp_output.size(); i++){
         new_vertex->addVertex(temp_output[i]);
     }
+    */
+    pos++;
+    vertexes.insert(pos, new_vertex);
 
     return new_vertex;
 }
@@ -55,8 +56,6 @@ SPVertex<T>* SPGraph<T>::SSPlit(SPVertex<T> *vertex, T &data)
 template<typename T>
 SPVertex<T> *SPGraph<T>::PSPlit(SPVertex<T> *vertex, T &data)
 {
-    SPVertex<T>* new_vertex = new SPVertex<T>(data);
-
     int pos = std::find(vertexes.begin(), vertexes.end(), vertex);
 
     if(pos == vertexes.end()){
@@ -69,12 +68,18 @@ SPVertex<T> *SPGraph<T>::PSPlit(SPVertex<T> *vertex, T &data)
         return NULL;
     }
 
+    if(vertex->count() != 1 && vertex->count(true) != 1){
+       //exeption
+       return NULL;
+    }
+
+    SPVertex<T>* new_vertex = new SPVertex<T>(data);
+
     std::list<SPVertex<T>*> temp_output = vertex->getOutputs();
     std::list<SPVertex<T>*> temp_input = vertex->getInputs();
-
-    pos--;
-    vertexes.insert(pos, new_vertex);
-
+    new_vertex->addVertex(temp_output);
+    new_vertex->addVertex(temp_input, true);
+    /*
     for(int i = 0; i < temp_output.size(); i++){
         new_vertex->addVertex(temp_output[i]);
     }
@@ -82,6 +87,9 @@ SPVertex<T> *SPGraph<T>::PSPlit(SPVertex<T> *vertex, T &data)
     for(int i = 0; i < temp_input.size(); i++){
         new_vertex->addVertex(temp_input[i], true);
     }
+    */
+    pos++;
+    vertexes.insert(pos, new_vertex);
 
     return new_vertex;
 }
@@ -101,12 +109,116 @@ void SPGraph<T>::deleteVertex(SPVertex<T> *vertex)
         return;
     }
 
-    if(pos == vertexes.begin() || vertexes.end()--){
+    if(pos == vertexes.begin()){
+        if(vertex->count(false) == 1){
+            v_list temp = vertex->getOutputs();
+            for(int i = 0; i < temp.size(); i++){
+               v_elem vt = temp[i];
+               vt->deleteVertex(vertex);
+               vertex->clearBonds();
+               vertexes.erase(pos);
+               delete vertex;
+            }
+        }
+        else{
+            //exeption
+            return;
+        }
+    }
+
+    if(pos == vertexes.end()--){
+        if(vertex->count(true) == 1){
+            v_list temp = vertex->getInputs();
+            for(int i = 0; i < temp.size(); i++){
+                v_elem vt = temp[i];
+                vt->deleteVertex(vertex, true);
+                vertex->clearBonds(true);
+                vertexes.erase(pos);
+                delete vertex;
+            }
+        }
+        else{
+            //exeption
+            return;
+        }
+    }
+
+    if(vertex->count(true) > 1 && vertex->count(false) > 1){
         //exeption
         return;
     }
 
+    if(vertex->count(true) == 1 && vertex->count(false) == 1){
+        v_list temp_input = vertex->getInputs();
+        v_list temp_output = vertex->getOutputs();
 
+        bool input_flag = false;
+        bool output_flag = false;
+
+        for(int i = 0; i < temp_input.size(); i++){
+            v_elem temp = temp_input[i];
+            if(temp->count(false) > 1){
+                input_flag = true;
+                break;
+            }
+        }
+
+        for(int i = 0; i < temp_output.size(); i++){
+            v_elem temp = temp_output[i];
+            if(temp->count(true) > 1){
+                output_flag = true;
+                break;
+            }
+        }
+
+        if(input_flag && output_flag){
+            vertex->clearBonds(true);
+            vertex->clearBonds();
+            vertexes.erase(pos);
+            delete vertex;
+            return;
+        }
+        else{
+            for(int i = 0; i < temp_output.size(); i++){
+                v_elem temp = temp_output[i];
+                temp->clearBonds(true);
+            }
+
+            for(int i = 0; i < temp_input.size(); i++){
+                v_elem temp = temp_input[i];
+                temp->clearBonds();
+                temp->addVertex(temp_output);
+            }
+            vertex->clearBonds();
+            vertex->clearBonds(true);
+            vertexes.erase(pos);
+            delete vertex;
+            return;
+        }
+    }
+
+    if((vertex->count(true) == 1 && vertex->count(false) > 1) ||
+        vertex->count(true) > 1 && vertex->count(false) == 1){
+
+        v_list temp_input = vertex->getInputs();
+        v_list temp_output = vertex->getOutputs();
+
+        for(int i = 0; i < temp_output.size(); i++){
+            v_elem temp = temp_output[i];
+            temp->clearBonds(true);
+            temp->addVertex(temp_input, true);
+        }
+
+        for(int i = 0; i < temp_input.size(); i++){
+            v_elem temp = temp_input[i];
+            temp->clearBonds();
+            temp->addVertex(temp_output);
+        }
+
+        vertexes.erase(pos);
+        delete vertex;
+        return;
+    }
 }
 
 template<typename T>
