@@ -33,5 +33,4 @@ private:
 
 }
 
-
 #endif // SPVERTEX_H

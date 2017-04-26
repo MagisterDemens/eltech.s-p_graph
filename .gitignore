@@ -1,0 +1,13 @@
+*.user
+build-MDP_containers-Desktop_Qt_5_5_1_MinGW_32bit-Debug/Makefile.Release
+build-MDP_containers-Desktop_Qt_5_5_1_MinGW_32bit-Debug/debug/main.o
+build-MDP_containers-Desktop_Qt_5_5_1_MinGW_32bit-Debug/debug/MDP_containers.exe
+build-MDP_containers-Desktop_Qt_5_5_1_MinGW_32bit-Debug/Makefile
+build-MDP_containers-Desktop_Qt_5_5_1_MinGW_32bit-Debug/debug/mainwindow.o
+build-MDP_containers-Desktop_Qt_5_5_1_MinGW_32bit-Debug/debug/moc_mainwindow.cpp
+build-MDP_containers-Desktop_Qt_5_5_1_MinGW_32bit-Debug/debug/spgraph.o
+build-MDP_containers-Desktop_Qt_5_5_1_MinGW_32bit-Debug/debug/moc_mainwindow.o
+build-MDP_containers-Desktop_Qt_5_5_1_MinGW_32bit-Debug/debug/spvertex.o
+MDP_containers/MDP_containers.pro.user
+build-MDP_containers-Desktop_Qt_5_5_1_MinGW_32bit-Debug/Makefile.Debug
+MDP_containers/MDP_containers.pro.user

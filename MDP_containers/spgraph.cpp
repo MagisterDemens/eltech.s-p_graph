@@ -25,7 +25,7 @@ SPGraph<T>::SPGraph(T &firstData, T &lastData)
 }
 
 template<typename T>
-SPVertex<T>* SPGraph<T>::SSPlit(SPVertex<T> *vertex, T &data)
+std::list<SPVertex<T> *> SPGraph<T>::SSPlit(SPVertex<T>* vertex, T &data)
 {
     int pos = std::find(vertexes.begin(), vertexes.end(), vertex);
 
@@ -54,7 +54,7 @@ SPVertex<T>* SPGraph<T>::SSPlit(SPVertex<T> *vertex, T &data)
 }
 
 template<typename T>
-SPVertex<T> *SPGraph<T>::PSPlit(SPVertex<T> *vertex, T &data)
+std::list<SPVertex<T> *> SPGraph<T>::PSPlit(SPVertex<T>* vertex, T &data)
 {
     int pos = std::find(vertexes.begin(), vertexes.end(), vertex);
 
@@ -95,7 +95,7 @@ SPVertex<T> *SPGraph<T>::PSPlit(SPVertex<T> *vertex, T &data)
 }
 
 template<typename T>
-void SPGraph<T>::deleteVertex(SPVertex<T> *vertex)
+void SPGraph<T>::deleteVertex(SPVertex<T>* vertex)
 {
     if(vertex == NULL){
         //exeption
@@ -111,9 +111,9 @@ void SPGraph<T>::deleteVertex(SPVertex<T> *vertex)
 
     if(pos == vertexes.begin()){
         if(vertex->count(false) == 1){
-            v_list temp = vertex->getOutputs();
+            std::list<SPVertex<T>*> temp = vertex->getOutputs();
             for(int i = 0; i < temp.size(); i++){
-               v_elem vt = temp[i];
+               SPVertex<T>* vt = temp[i];
                vt->deleteVertex(vertex);
                vertex->clearBonds();
                vertexes.erase(pos);
@@ -128,9 +128,9 @@ void SPGraph<T>::deleteVertex(SPVertex<T> *vertex)
 
     if(pos == vertexes.end()--){
         if(vertex->count(true) == 1){
-            v_list temp = vertex->getInputs();
+            std::list<SPVertex<T>*> temp = vertex->getInputs();
             for(int i = 0; i < temp.size(); i++){
-                v_elem vt = temp[i];
+                SPVertex<T>* vt = temp[i];
                 vt->deleteVertex(vertex, true);
                 vertex->clearBonds(true);
                 vertexes.erase(pos);
@@ -149,14 +149,14 @@ void SPGraph<T>::deleteVertex(SPVertex<T> *vertex)
     }
 
     if(vertex->count(true) == 1 && vertex->count(false) == 1){
-        v_list temp_input = vertex->getInputs();
-        v_list temp_output = vertex->getOutputs();
+        std::list<SPVertex<T>*> temp_input = vertex->getInputs();
+        std::list<SPVertex<T>*> temp_output = vertex->getOutputs();
 
         bool input_flag = false;
         bool output_flag = false;
 
         for(int i = 0; i < temp_input.size(); i++){
-            v_elem temp = temp_input[i];
+            SPVertex<T>* temp = temp_input[i];
             if(temp->count(false) > 1){
                 input_flag = true;
                 break;
@@ -164,7 +164,7 @@ void SPGraph<T>::deleteVertex(SPVertex<T> *vertex)
         }
 
         for(int i = 0; i < temp_output.size(); i++){
-            v_elem temp = temp_output[i];
+            SPVertex<T>* temp = temp_output[i];
             if(temp->count(true) > 1){
                 output_flag = true;
                 break;
@@ -180,12 +180,12 @@ void SPGraph<T>::deleteVertex(SPVertex<T> *vertex)
         }
         else{
             for(int i = 0; i < temp_output.size(); i++){
-                v_elem temp = temp_output[i];
+                SPVertex<T>* temp = temp_output[i];
                 temp->clearBonds(true);
             }
 
             for(int i = 0; i < temp_input.size(); i++){
-                v_elem temp = temp_input[i];
+                SPVertex<T>* temp = temp_input[i];
                 temp->clearBonds();
                 temp->addVertex(temp_output);
             }
@@ -200,17 +200,17 @@ void SPGraph<T>::deleteVertex(SPVertex<T> *vertex)
     if((vertex->count(true) == 1 && vertex->count(false) > 1) ||
         vertex->count(true) > 1 && vertex->count(false) == 1){
 
-        v_list temp_input = vertex->getInputs();
-        v_list temp_output = vertex->getOutputs();
+        std::list<SPVertex<T>*> temp_input = vertex->getInputs();
+        std::list<SPVertex<T>*> temp_output = vertex->getOutputs();
 
         for(int i = 0; i < temp_output.size(); i++){
-            v_elem temp = temp_output[i];
+            SPVertex<T>* temp = temp_output[i];
             temp->clearBonds(true);
             temp->addVertex(temp_input, true);
         }
 
         for(int i = 0; i < temp_input.size(); i++){
-            v_elem temp = temp_input[i];
+            SPVertex<T>* temp = temp_input[i];
             temp->clearBonds();
             temp->addVertex(temp_output);
         }
@@ -225,4 +225,59 @@ template<typename T>
 SPGraph<T>::~SPGraph()
 {
     vertexes.clear();
+}
+
+template<typename T>
+SPGraph<T>::SPGraphIterator::SPGraphIterator(const size_t pos, std::list<SPVertex<T>*> list)
+{
+    m_pos = pos;
+    m_list = list;
+    m_iterator = list.begin();
+    for(int i = 0; i < m_pos; i++) m_iterator++;
+}
+
+template<typename T>
+typename SPGraph<T>::SPGraphIterator &SPGraph<T>::SPGraphIterator::operator ++()
+{
+    if(m_list.size() < m_pos+1){
+        //exeption
+        return *this;
+    }
+    m_pos++;
+    m_iterator++;
+    return *this;
+}
+
+template<typename T>
+typename SPGraph<T>::SPGraphIterator &SPGraph<T>::SPGraphIterator::operator --()
+{
+    if(0 > m_pos-1){
+        //exeption
+        return *this;
+    }
+    m_pos--;
+    m_iterator--;
+    return *this;
+}
+
+template<typename T>
+bool SPGraph<T>::SPGraphIterator::operator ==(const SPGraph<T>::SPGraphIterator &iterator)
+{
+    return (m_iterator == iterator.m_iterator);
+}
+template<typename T>
+bool SPGraph<T>::SPGraphIterator::operator !=(const SPGraph<T>::SPGraphIterator &iterator)
+{
+    return (m_iterator != iterator.m_iterator);
+}
+
+template<typename T>
+SPVertex<T> *SPGraph<T>::SPGraphIterator::operator *()
+{
+    if(m_pos == m_list.size()){
+        //exeption
+        return NULL;
+    }
+
+    return *m_iterator;
 }

@@ -33,7 +33,7 @@ std::list<SPVertex<T> *> SPVertex<T>::getOutputs() const
 }
 
 template<typename T>
-void SPVertex<T>::addVertex(SPVertex<T> *vertex, bool is_input)
+void SPVertex<T>::addVertex(SPVertex<T>* vertex, bool is_input)
 {
     if(vertex == NULL){
         //Need exeption here
@@ -49,7 +49,7 @@ void SPVertex<T>::addVertex(SPVertex<T> *vertex, bool is_input)
 }
 
 template<typename T>
-void SPVertex<T>::addVertex(std::list<SPVertex<T> *> vertex, bool is_input)
+void SPVertex<T>::addVertex(std::list<SPVertex<T>*> vertex, bool is_input)
 {
     if(vertex.size() == 0){
         //exeption
@@ -69,7 +69,7 @@ void SPVertex<T>::addVertex(std::list<SPVertex<T> *> vertex, bool is_input)
 }
 
 template<typename T>
-void SPVertex<T>::deleteVertex(SPVertex<T> *vertex, bool is_input)
+void SPVertex<T>::deleteVertex(SPVertex<T>* vertex, bool is_input)
 {
     if(vertex == NULL){
         //Need exeption here
@@ -114,7 +114,7 @@ SPVertex<T>::~SPVertex()
 }
 
 template<typename T>
-void SPVertex<T>::deleteV(SPVertex<T> *vertex, std::list<SPVertex<T> *> m_list)
+void SPVertex<T>::deleteV(SPVertex<T>* vertex, std::list<SPVertex<T>*> m_list)
 {
     int pos = std::find(m_list.begin(), m_list.end(), vertex);
     if(pos == m_list.end()){
@@ -125,7 +125,7 @@ void SPVertex<T>::deleteV(SPVertex<T> *vertex, std::list<SPVertex<T> *> m_list)
 }
 
 template<typename T>
-void SPVertex<T>::addV(SPVertex<T> *vertex, std::list<SPVertex<T> *> m_list)
+void SPVertex<T>::addV(SPVertex<T>* vertex, std::list<SPVertex<T>*> m_list)
 {
     int pos = std::find(m_list.begin(), m_list.end(), vertex);
     if(pos != m_list.end()){
