@@ -24,6 +24,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    spgraph.cpp \
+    spvertex.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    spgraph.h \
+    spvertex.h
