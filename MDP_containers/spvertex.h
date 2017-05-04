@@ -9,11 +9,13 @@
 namespace spg {
 
 template<typename T> class SPGraph;
+template<typename T> class SPVertexManipulator;
 
 template<typename T>
 class SPVertex
 {
     friend class SPGraph<T>;
+    friend class SPVertexManipulator<T>;
 
     T m_data;
     std::list<SPVertex<T>*> m_in;

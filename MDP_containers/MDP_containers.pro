@@ -30,10 +30,12 @@ SOURCES += main.cpp\
     spvertex.cpp \
     spgraph.cpp \
     spgraphallocator.cpp \
-    spgraphiterator.cpp
+    spgraphiterator.cpp \
+    spmanipulator.cpp
 
 HEADERS  += mainwindow.h \
     spvertex.h \
     spgraph.h \
     spgraphallocator.h \
-    spgraphiterator.h
+    spgraphiterator.h \
+    spmanipulator.h
