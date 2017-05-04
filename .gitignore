@@ -11,3 +11,15 @@ build-MDP_containers-Desktop_Qt_5_5_1_MinGW_32bit-Debug/debug/spvertex.o
 MDP_containers/MDP_containers.pro.user
 build-MDP_containers-Desktop_Qt_5_5_1_MinGW_32bit-Debug/Makefile.Debug
 MDP_containers/MDP_containers.pro.user
+*.user
+*.stash
+*.obj
+build-MDP_containers-Desktop_Qt_5_8_0_MSVC2015_32bit-Debug/debug/MDP_containers.exe
+*.Debug
+*.Release
+*.ilk
+*.pdb
+build-MDP_containers-Desktop_Qt_5_8_0_MSVC2015_32bit-Debug/debug/moc_mainwindow.cpp
+build-MDP_containers-Desktop_Qt_5_8_0_MSVC2015_32bit-Debug/debug/moc_predefs.h
+build-MDP_containers-Desktop_Qt_5_8_0_MSVC2015_32bit-Debug/Makefile
+MDP_containers/MDP_containers.pro.user
