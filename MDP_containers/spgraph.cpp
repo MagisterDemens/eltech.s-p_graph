@@ -118,4 +118,16 @@ void SPGraph<T>::addBond(SPVertex<T> *in_v, SPVertex<T> *out_v)
     out_v->addBondVertex(in_v);
 }
 
+template<typename T>
+std::ostream& operator<<(std::ostream &os, const SPGraph<T> &spgraph)
+{
+    return os;
+}
+
+template<typename T>
+std::istream& operator>>(std::istream &is, SPGraph<T> &spgraph)
+{
+    return is;
+}
+
 }

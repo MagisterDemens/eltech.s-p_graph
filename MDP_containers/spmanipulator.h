@@ -20,14 +20,14 @@ public:
 };
 
 
-template<typename V>
+template<typename T>
 class SPVertexManipulator{
     SPVertex<V>* m_vertex;
 public:
     SPVertexManipulator(SPVertex<V>* vertex);
 
-    template<typename W>
-    friend std::ostream &operator<< (std::ostream& os, const SPVertexManipulator<W>& vertex_manip);
+    template<typename R>
+    friend std::ostream &operator<< (std::ostream& os, const SPVertexManipulator<R>& vertex_manip);
 };
 
 }

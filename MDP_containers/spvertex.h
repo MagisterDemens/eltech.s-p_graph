@@ -34,6 +34,12 @@ public:
     T getData();
 
     ~SPVertex();
+
+    template<typename R>
+    friend std::ostream& operator<<(std::ostream& os, const SPVertex<R>* spvertex);
+
+    template<typename R>
+    friend std::istream& operator>>(std::istream& is, SPGraph<R>* spvertex);
 protected:
 
 };

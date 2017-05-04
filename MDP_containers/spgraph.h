@@ -35,6 +35,12 @@ public:
     SPGraphIterator<T> begin();
     SPGraphIterator<T> end();
 
+    template<typename R>
+    friend std::ostream& operator<<(std::ostream& os,const SPGraph<R> &spgraph);
+
+    template<typename R>
+    friend std::istream& operator>>(std::istream& is, SPGraph<R> &spgraph);
+
     ~SPGraph();
 
 protected:

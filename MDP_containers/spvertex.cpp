@@ -114,4 +114,16 @@ SPVertex<T>::~SPVertex()
     this->clearBonds(true);
 }
 
+template<typename T>
+std::ostream& operator<<(std::ostream &os, const SPVertex<T> *spvertex)
+{
+    return os;
+}
+
+template<typename T>
+std::istream& operator>>(std::istream &is, SPGraph<T> *spvertex)
+{
+    return is;
+}
+
 }

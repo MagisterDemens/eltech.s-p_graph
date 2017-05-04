@@ -8,22 +8,22 @@ SPGraphManipulator<T>::SPGraphManipulator(SPGraph<T> &graph)
 
 }
 
-template<typename R>
-std::ostream& operator<<(std::ostream &os, const SPGraphManipulator<R> &graph_manip)
+template<typename T>
+std::ostream& operator<<(std::ostream &os, const SPGraphManipulator<T> &graph_manip)
+{
+    return os;
+}
+
+template<typename T>
+SPVertexManipulator<T>::SPVertexManipulator(SPVertex<T> *vertex)
 {
 
 }
 
-template<typename V>
-SPVertexManipulator<V>::SPVertexManipulator(SPVertex<V> *vertex)
+template<typename T>
+std::ostream& operator<<(std::ostream &os, const SPVertexManipulator<T> &vertex_manip)
 {
-
-}
-
-template<typename W>
-std::ostream& operator<<(std::ostream &os, const SPVertexManipulator<W> &vertex_manip)
-{
-
+    return os;
 }
 
 

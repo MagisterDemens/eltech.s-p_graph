@@ -31,11 +31,13 @@ SOURCES += main.cpp\
     spgraph.cpp \
     spgraphallocator.cpp \
     spgraphiterator.cpp \
-    spmanipulator.cpp
+    spmanipulator.cpp \
+    spgexception.cpp
 
 HEADERS  += mainwindow.h \
     spvertex.h \
     spgraph.h \
     spgraphallocator.h \
     spgraphiterator.h \
-    spmanipulator.h
+    spmanipulator.h \
+    spgexception.h
