@@ -3,13 +3,13 @@
 namespace spg {
 
 template<typename T>
-SPVertex<T> *SPGraphAllocator::newVertex(T data)
+SPVertex<T> *SPGraphAllocator<T>::newVertex(T data)
 {
     return new SPVertex<T>(data);
 }
 
 template<typename T>
-void SPGraphAllocator::freeVertex(SPVertex<T> *vertex)
+void SPGraphAllocator<T>::freeVertex(SPVertex<T> *vertex)
 {
     auto pos = std::find(vertex_mem.begin(), vertex_mem.end(), vertex);
     if(pos == vertex_mem.end()){
@@ -21,9 +21,9 @@ void SPGraphAllocator::freeVertex(SPVertex<T> *vertex)
 }
 
 template<typename T>
-void SPGraphAllocator::freAll()
+void SPGraphAllocator<T>::freAll()
 {
-    std::for_each(vertex_mem.begin(), vertex_mem.end(), [](SPVertex<T>* v){v-delete v});
+    std::for_each(vertex_mem.begin(), vertex_mem.end(), [](SPVertex<T>* v){delete v;});
     vertex_mem.clear();
 }
 

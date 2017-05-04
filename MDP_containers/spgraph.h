@@ -3,6 +3,7 @@
 
 #include"spvertex.h"
 #include"spgraphallocator.h"
+#include"spgraphiterator.h"
 
 #include<list>
 #include<algorithm>
@@ -12,9 +13,10 @@ namespace spg {
 template<typename T>
 class SPGraph
 {
+
     std::list<SPVertex<T>*> vertex_list;
 
-    SPGraphAllocator allocator;
+    SPGraphAllocator<T> allocator;
 
     SPGraph();
 public:
@@ -26,6 +28,9 @@ public:
 
     void deleteVertex(SPVertex<T>* vertex);
     void clearGraph();
+
+    SPGraphIterator<T> begin();
+    SPGraphIterator<T> end();
 
     ~SPGraph();
 

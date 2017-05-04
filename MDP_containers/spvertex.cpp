@@ -85,7 +85,7 @@ unsigned int SPVertex<T>::countBonds(bool out)
 }
 
 template<typename T>
-const std::list<SPVertex<spg::T> *> SPVertex<T>::getBonds(bool out)
+const std::list<SPVertex<T> *> SPVertex<T>::getBonds(bool out)
 {
     if(out){
         return m_out;
