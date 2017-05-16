@@ -15,20 +15,43 @@ class SPGraphManipulator
 public:
     SPGraphManipulator(SPGraph<T> &graph);
 
-    template<typename R>
-    friend std::ostream &operator<< (std::ostream& os, const SPGraphManipulator<R>& graph_manip);
+    template<typename T>
+    friend std::ostream &operator<< (std::ostream& os, const SPGraphManipulator<T>& graph_manip);
 };
-
 
 template<typename T>
 class SPVertexManipulator{
-    SPVertex<V>* m_vertex;
+    SPVertex<T>* m_vertex;
 public:
-    SPVertexManipulator(SPVertex<V>* vertex);
+    SPVertexManipulator(SPVertex<T>* vertex);
 
-    template<typename R>
-    friend std::ostream &operator<< (std::ostream& os, const SPVertexManipulator<R>& vertex_manip);
+    template<typename T>
+    friend std::ostream &operator<< (std::ostream& os, const SPVertexManipulator<T>& vertex_manip);
 };
+
+template<typename T>
+SPGraphManipulator::SPGraphManipulator(SPGraph<spg::T> &graph)
+{
+    m_graph = graph;
+}
+
+template<typename T>
+std::ostream& operator<<(std::ostream &os, const SPGraphManipulator<T> &graph_manip)
+{
+    return os;
+}
+
+template<typename T>
+SPVertexManipulator<T>::SPVertexManipulator(SPVertex<T> *vertex)
+{
+    m_vertex = vertex;
+}
+
+template<typename T>
+std::ostream& operator<<(std::ostream &os, const SPVertexManipulator<T> &vertex_manip)
+{
+    return os;
+}
 
 }
 
