@@ -3,8 +3,8 @@
 
 #include<list>
 #include<algorithm>
-
-//
+#include"spgexception.h"
+//#include"spmanipulator.h"
 
 namespace spg {
 
@@ -83,14 +83,25 @@ template<typename T>
 void SPVertex<T>::addBondVertex(SPVertex<T> *vertex, bool out)
 {
     if(vertex == NULL){
-        //exception
+        THROW_SPG_NULL_POINTER_EXCEPTION("NULL pointer");
         return;
     }
 
+
     if(out){
+        auto pos = std::find(m_out.begin(), m_out.end(), vertex);
+        if(pos != m_out.end()){
+            THROW_SPG_VERTEX_EXCEPTION("Vertex already in bond");
+            return;
+        }
         m_out.push_back(vertex);
     }
     else{
+        auto pos = std::find(m_in.begin(), m_in.end(), vertex);
+        if(pos != m_in.end()){
+            THROW_SPG_VERTEX_EXCEPTION("Vertex already in bond");
+            return;
+        }
         m_in.push_back(vertex);
     }
 }
@@ -99,16 +110,22 @@ template<typename T>
 void SPVertex<T>::deleteBondVertex(SPVertex<T> *vertex, bool out)
 {
     if(vertex == NULL){
-        //exception
+        THROW_SPG_NULL_POINTER_EXCEPTION("NULL pointer");
         return;
     }
 
     if(out){
         auto pos = std::find(m_out.begin(), m_out.end(), vertex);
+        if(pos == m_out.end()){
+            THROW_SPG_VERTEX_EXCEPTION("There is not matching vertex in bond");
+        }
         m_out.erase(pos);
     }
     else{
         auto pos = std::find(m_in.begin(), m_in.end(), vertex);
+        if(pos == m_in.end()){
+            THROW_SPG_VERTEX_EXCEPTION("There is not matching vertex in bond");
+        }
         m_in.erase(pos);
     }
 }

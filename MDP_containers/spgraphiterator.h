@@ -2,6 +2,7 @@
 #define SPGRAPHITERATOR_H
 
 #include"spvertex.h"
+#include"spgexception.h"
 
 namespace spg {
 
@@ -48,7 +49,7 @@ template<typename T>
 SPGraphIterator<T>& SPGraphIterator<T>::operator ++()
 {
     if(m_list.size() < m_pos+1){
-        //exception
+        THROW_SPG_ITERATOR_EXCEPTION("Increment is going out of bonds");
         return* this;
     }
 
@@ -61,7 +62,7 @@ template<typename T>
 SPGraphIterator<T> &SPGraphIterator<T>::operator +=(const size_t o)
 {
     if(m_list.size() < m_pos+o){
-        //exception
+        THROW_SPG_ITERATOR_EXCEPTION("Increment is going out of bonds");
         return* this;
     }
 
@@ -76,7 +77,7 @@ template<typename T>
 SPGraphIterator<T> &SPGraphIterator<T>::operator --()
 {
     if(0 > m_pos-1){
-        //exception
+        THROW_SPG_ITERATOR_EXCEPTION("Decrement is going out of bonds");
         return* this;
     }
 
@@ -89,7 +90,7 @@ template<typename T>
 SPGraphIterator<T> &SPGraphIterator<T>::operator -=(const size_t o)
 {
     if(0 > m_pos-o){
-        //exception
+        THROW_SPG_ITERATOR_EXCEPTION("Decrement is going out of bonds");
         return* this;
     }
 
@@ -116,7 +117,7 @@ template<typename T>
 SPVertex<T> *SPGraphIterator<T>::operator *()
 {
     if(m_pos == m_list.size()){
-        //exception
+        THROW_SPG_ITERATOR_EXCEPTION("Iterator points on NULL");
         return NULL;
     }
 
