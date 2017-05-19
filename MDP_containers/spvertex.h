@@ -4,12 +4,12 @@
 #include<list>
 #include<algorithm>
 #include"spgexception.h"
-//#include"spmanipulator.h"
+#include"spmanipulator.h"
 
 namespace spg {
 
 template<typename T> class SPGraph;
-template<typename T> class SPVertexManipulator;
+//template<typename T> class SPGraphManipulator;
 
 enum VertexBondType{
     VertexStartSingle,
@@ -27,13 +27,14 @@ template<typename T>
 class SPVertex
 {
     friend class SPGraph<T>;
-    friend class SPVertexManipulator<T>;
+    //friend class SPGraphManipulator<T>;
 
     T m_data;
     std::list<SPVertex<T>*> m_in;
     std::list<SPVertex<T>*> m_out;
 
-    void setBond(std::list<SPVertex<T>*> list, bool out = false);
+    /*void setBond(std::list<SPVertex<T>*> list, bool out = false);
+    std::list<SPVertex<T>*> getBond(bool out = false);*/
     void clearBond(bool out = false);
     void addBondVertex(SPVertex<T>* vertex, bool out = false);
     void deleteBondVertex(SPVertex<T>* vertex, bool out = false);
@@ -44,9 +45,11 @@ public:
     void setData(T data);
     T getData();
 
-    size_t bondCound(bool out = false);
+    size_t bondCount(bool out = false);
     VertexBondType BondType();
 
+    void setBond(std::list<SPVertex<T>*> list, bool out = false);
+    std::list<SPVertex<T>*> getBond(bool out = false);
 
     template<typename I>
     friend std::ostream& operator << (std::ostream& os, const SPVertex<I>* vertex);
@@ -65,6 +68,17 @@ void SPVertex<T>::setBond(std::list<SPVertex<T> *> list, bool out)
     }
     else{
         m_in = list;
+    }
+}
+
+template<typename T>
+std::list<SPVertex<T> *> SPVertex<T>::getBond(bool out)
+{
+    if(out){
+        return m_out;
+    }
+    else{
+        return m_in;
     }
 }
 
@@ -149,7 +163,7 @@ T SPVertex<T>::getData()
 }
 
 template<typename T>
-size_t SPVertex<T>::bondCound(bool out)
+size_t SPVertex<T>::bondCount(bool out)
 {
     if(out){
         return m_out.size();
@@ -216,6 +230,7 @@ SPVertex<T>::~SPVertex()
 template<typename I>
 std::ostream& operator <<(std::ostream &os, const SPVertex<I>* vertex)
 {
+    os << vertex->m_data;
     return os;
 }
 

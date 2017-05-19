@@ -23,7 +23,9 @@ public:
 template<typename T> inline
 SPVertex<T> *SPGraphAllocator<T>::newVertex(T data)
 {
-    return new SPVertex<T>(data);
+    SPVertex<T>* temp = new SPVertex<T>(data);
+    vertex_mem.push_back(temp);
+    return temp;
 }
 
 template<typename T>

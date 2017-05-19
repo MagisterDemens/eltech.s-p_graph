@@ -4,6 +4,7 @@
 #include"spvertex.h"
 #include"spgraphallocator.h"
 #include"spgraphiterator.h"
+#include"spmanipulator.h"
 #include"spgexception.h"
 
 #include<list>
@@ -12,12 +13,11 @@
 
 namespace spg {
 
-template<typename T> class SPGraphManupulator;
-
 template<typename T>
 class SPGraph
 {
-    friend class SPGraphManupulator<T>;
+
+    //friend class SPGraphManipulator<T>;
 
     std::list<SPVertex<T>*> vertex_list;
 
@@ -39,10 +39,14 @@ public:
     SPGraphIterator<T> begin();
     SPGraphIterator<T> end();
 
+    size_t size();
+    unsigned int position(SPVertex<T>* vertex);
+    SPVertex<T>* at(unsigned int pos);
+
     template<typename O>
-    friend std::ostream& operator << (std::ostream& os, SPGraph<O> graph);
+    friend std::ostream& operator << (std::ostream& os, SPGraph<O>* graph);
     template<typename I>
-    friend std::istream& operator >> (std::ostream& is, SPGraph<I> graph);
+    friend std::istream& operator >> (std::ostream& is, SPGraph<I>& graph);
 
     ~SPGraph();
 };
@@ -152,8 +156,8 @@ void SPGraph<T>::insertVertex(SPVertex<T> *old_v, SPVertex<T> *new_v, bool after
 template<typename T>
 SPGraph<T>::SPGraph(T data)
 {
-    SPVertex<T> in_v = allocator.newVertex(data);
-    SPVertex<T> out_v = allocator.newVertex(data);
+    SPVertex<T>* in_v = allocator.newVertex(data);
+    SPVertex<T>* out_v = allocator.newVertex(data);
 
     vertex_list.push_back(in_v);
     vertex_list.push_back(out_v);
@@ -275,7 +279,7 @@ void SPGraph<T>::deleteVertex(SPVertex<T>* vertex)
         SPVertex<T>* temp1 = vertex->m_in.front();
         SPVertex<T>* temp2 = vertex->m_out.front();
 
-        if(temp1->bondCound(true) > 1 && temp2->bondCound(false) > 1){
+        if(temp1->bondCount(true) > 1 && temp2->bondCount(false) > 1){
             deleteVertexWithoutMerge(vertex);
         }
         else{
@@ -298,23 +302,57 @@ SPGraphIterator<T> SPGraph<T>::end()
 }
 
 template<typename T>
+size_t SPGraph<T>::size()
+{
+    return vertex_list.size();
+}
+
+template<typename T>
+unsigned int SPGraph<T>::position(SPVertex<T> *vertex)
+{
+    unsigned int pos = 0;
+
+    for(auto i = vertex_list.begin(); i != vertex_list.end(); i++){
+        if(*i == vertex){
+            break;
+        }
+        pos++;
+    }
+    return pos;
+}
+
+template<typename T>
+SPVertex<T> *SPGraph<T>::at(unsigned int pos)
+{
+    if(pos >= vertex_list.size()){
+        THROW_SPG_NULL_POINTER_EXCEPTION("Null pointer (position out of graph)");
+        return NULL;
+    }
+
+    auto i = vertex_list.begin();
+    i += pos;
+    return *i;
+}
+
+template<typename T>
 SPGraph<T>::~SPGraph()
 {
     allocator.freAll();
+    vertex_list.clear();
 }
 
 template<typename O>
-std::ostream& operator <<(std::ostream &os, SPGraph<O> graph)
+std::ostream& operator <<(std::ostream &os, SPGraph<O>* graph)
 {
+    os << SPGraphManipulator<O>(graph);
     return os;
 }
 
 template<typename I>
-std::istream& operator >>(std::ostream &is, SPGraph<I> graph)
+std::istream& operator >>(std::ostream &is, SPGraph<I>& graph)
 {
     return is;
 }
-
 
 }
 
