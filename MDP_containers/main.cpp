@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     */
 
     SPGraph<CircuitElemData>* graph = new SPGraph<CircuitElemData>(CircuitElemData(1,2,2));
-    std::cout << graph;
+    std::cout << graph->SPGStruct() << "\0";
 
     return a.exec();
 }

@@ -45,14 +45,14 @@ public:
     unsigned int position(SPVertex<T>* vertex) const;
     SPVertex<T>* at(unsigned int pos) const;
 
-    std::vector<unsigned int> getVertexDestination(SPVertex<T>* vertex) const;
+    std::vector<unsigned int> getVertexDestination(SPVertex<T>* vertex, bool out = false) const;
 
     const char* SPGStruct() const;
 
     template<typename O>
     friend std::ostream& operator << (std::ostream& os, SPGraph<O>* graph);
     template<typename I>
-    friend std::istream& operator >> (std::ostream& is, SPGraph<I>& graph);
+    friend std::istream& operator >> (std::istream& is, SPGraph<I>* graph);
 
     ~SPGraph();
 };
@@ -349,11 +349,27 @@ SPVertex<T> *SPGraph<T>::at(unsigned int pos) const
 }
 
 template<typename T>
-std::vector<unsigned int> SPGraph<T>::getVertexDestination(SPVertex<T> *vertex) const
+std::vector<unsigned int> SPGraph<T>::getVertexDestination(SPVertex<T> *vertex, bool out) const
 {
     std::vector<unsigned int> destination;
-    std::list<SPVertex<T>*> out = vertex->getBond(true);
-    for(auto i = out.begin(); i != out.end(); i++){
+
+    auto pos = std::find(vertex_list.begin(), vertex_list.end(), vertex);
+
+    if(pos == vertex_list.end()){
+        THROW_SPG_NULL_POINTER_EXCEPTION("Null pointer");
+        return destination;
+    }
+
+    std::list<SPVertex<T>*> temp;
+    if(out)
+    {
+        temp = vertex->getBond(true);
+    }
+    else
+    {
+        temp = vertex->getBond();
+    }
+    for(auto i = temp.begin(); i != temp.end(); i++){
         destination.push_back(this->position(*i));
     }
 
@@ -375,12 +391,13 @@ const char *SPGraph<T>::SPGStruct() const
     for(auto i = vertex_list.begin(); i != vertex_list.end(); i++){
         SPVertex<T>* temp = *i;
         oss << this->position(temp) << " " << temp->bondCount(true);
-        std::vector<unsigned int> out = this->getVertexDestination(temp);
+        std::vector<unsigned int> out = this->getVertexDestination(temp, true);
         for(auto j = out.begin(); j != out.end(); j++){
             oss << " " << *j;
         }
         oss << std::endl;
     }
+    oss << "\n";
 
     return oss.str().c_str();
 }
@@ -400,8 +417,27 @@ std::ostream& operator <<(std::ostream &os, SPGraph<O>* graph)
 }
 
 template<typename I>
-std::istream& operator >>(std::ostream &is, SPGraph<I>& graph)
+std::istream& operator >>(std::istream &is, SPGraph<I>* graph)
 {
+    unsigned int s;
+    is >> s;
+    for(int i = 0; i < s; i++){
+        I temp;
+        is >> temp;
+        graph->createVertex(temp);
+    }
+
+    for(int i = 0; i < s; i++){
+        unsigned int n;
+        unsigned int c;
+        is >> n;
+        is >> c;
+        for(int j = 0; j < c; j++){
+            unsigned int d;
+            is >> d;
+            graph->connectVertexes(graph->at(n), graph->at(d));
+        }
+    }
     return is;
 }
 
