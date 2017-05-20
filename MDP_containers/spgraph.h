@@ -56,7 +56,7 @@ public:
     void clear();
 
     template<typename O>
-    friend std::ostream& operator << (std::ostream& os, SPGraph<O>& graph);
+    friend std::ostream& operator << (std::ostream& os, const SPGraph<O>& graph);
     template<typename I>
     friend std::istream& operator >> (std::istream& is, SPGraph<I>& graph);
 
@@ -426,7 +426,7 @@ SPGraph<T>::~SPGraph()
 }
 
 template<typename O>
-std::ostream& operator <<(std::ostream &os, SPGraph<O>& graph)
+std::ostream& operator <<(std::ostream &os, const SPGraph<O>& graph)
 {
     os << SPGraphManipulator<O>(graph);
     return os;

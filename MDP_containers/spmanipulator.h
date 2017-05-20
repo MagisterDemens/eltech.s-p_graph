@@ -28,7 +28,7 @@ template<typename T>
 std::ostream& operator<<(std::ostream &os, const SPGraphManipulator<T> &graph_manip)
 {
     size_t size = graph_manip.m_graph.size();
-    os << "Number of vertices: " << size << std::endl;
+    os << "Number of vertices: " << size << "\n";
     //auto it = graph_manip.m_graph.begin();
     for(unsigned int j = 0; j < size; j++){
         SPVertex<T>* temp = graph_manip.m_graph.at(j);
@@ -38,7 +38,7 @@ std::ostream& operator<<(std::ostream &os, const SPGraphManipulator<T> &graph_ma
             os << *i << " ";
         }
         if(j != size-1){
-            os << std::endl << std::endl;
+            os << "\n\n";
         }
         //++it;
     }
