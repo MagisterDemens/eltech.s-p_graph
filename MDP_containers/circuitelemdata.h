@@ -27,6 +27,7 @@ public:
         double u = data.getU();
         double i = data.getI();
         os << r << " " << u << " " << i;
+        return os;
     }
 
     friend std::istream& operator >> (std::istream& is, CircuitElemData& data){

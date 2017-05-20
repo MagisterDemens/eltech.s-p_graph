@@ -53,8 +53,6 @@ public:
 
     template<typename I>
     friend std::ostream& operator << (std::ostream& os, const SPVertex<I>* vertex);
-    template<typename O>
-    friend std::istream& operator >> (std::istream& is, SPVertex<O>* vertex);
 
     ~SPVertex();
 
@@ -232,12 +230,6 @@ std::ostream& operator <<(std::ostream &os, const SPVertex<I>* vertex)
 {
     os << vertex->m_data;
     return os;
-}
-
-template<typename O>
-std::istream& operator >>(std::istream &is, SPVertex<O>* vertex)
-{
-    return is;
 }
 
 }

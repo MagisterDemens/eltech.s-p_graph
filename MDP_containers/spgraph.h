@@ -11,6 +11,9 @@
 #include<algorithm>
 #include<iterator>
 #include<sstream>
+#include<iostream>
+#include<QDebug>
+#include<stdio.h>
 
 namespace spg {
 
@@ -24,13 +27,14 @@ class SPGraph
 
     SPGraphAllocator<T> allocator;
 
-    SPGraph();
+
     void createVertex(T data);
     void deleteVertexWithoutMerge(SPVertex<T>* vertex);
     void deleteVertexWithMerge(SPVertex<T>* vertex);
     void insertVertex(SPVertex<T>* old_v, SPVertex<T>* new_v, bool after = false);
     void connectVertexes(SPVertex<T>* v1, SPVertex<T>* v2);
 public:
+    SPGraph();
     SPGraph(T data);
     SPGraph(T in_data, T out_data);
 
@@ -49,10 +53,12 @@ public:
 
     const char* SPGStruct() const;
 
+    void clear();
+
     template<typename O>
-    friend std::ostream& operator << (std::ostream& os, SPGraph<O>* graph);
+    friend std::ostream& operator << (std::ostream& os, SPGraph<O>& graph);
     template<typename I>
-    friend std::istream& operator >> (std::istream& is, SPGraph<I>* graph);
+    friend std::istream& operator >> (std::istream& is, SPGraph<I>& graph);
 
     ~SPGraph();
 };
@@ -66,7 +72,7 @@ SPGraph<T>::SPGraph()
 template<typename T>
 void SPGraph<T>::createVertex(T data)
 {
-    SPVertex<T> vertex = allocator.newVertex(data);
+    SPVertex<T>* vertex = allocator.newVertex(data);
     vertex_list.push_back(vertex);
 }
 
@@ -344,7 +350,11 @@ SPVertex<T> *SPGraph<T>::at(unsigned int pos) const
     }
 
     auto i = vertex_list.begin();
-    i += pos;
+
+    for(unsigned int j = 0; j < pos; j++){
+        i++;
+    }
+
     return *i;
 }
 
@@ -397,9 +407,15 @@ const char *SPGraph<T>::SPGStruct() const
         }
         oss << std::endl;
     }
-    oss << "\n";
 
     return oss.str().c_str();
+}
+
+template<typename T>
+void SPGraph<T>::clear()
+{
+    allocator.freAll();
+    vertex_list.clear();
 }
 
 template<typename T>
@@ -410,32 +426,39 @@ SPGraph<T>::~SPGraph()
 }
 
 template<typename O>
-std::ostream& operator <<(std::ostream &os, SPGraph<O>* graph)
+std::ostream& operator <<(std::ostream &os, SPGraph<O>& graph)
 {
     os << SPGraphManipulator<O>(graph);
     return os;
 }
 
 template<typename I>
-std::istream& operator >>(std::istream &is, SPGraph<I>* graph)
+std::istream& operator >>(std::istream &is, SPGraph<I>& graph)
 {
+    //graph = new SPGraph<I>();
     unsigned int s;
+    //qDebug() << "Read size\n";
     is >> s;
-    for(int i = 0; i < s; i++){
+    //qDebug() << "hui" << s;
+    for(unsigned int i = 0; i < s; i++){
+        //qDebug() << "Data #" << i << "\n";
         I temp;
         is >> temp;
-        graph->createVertex(temp);
+        graph.createVertex(temp);
     }
 
-    for(int i = 0; i < s; i++){
+    for(unsigned int i = 0; i < s; i++){
         unsigned int n;
         unsigned int c;
+        //qDebug() << "Connection #" << i << "\n";
         is >> n;
+        //qDebug() << "Count #" << i << "\n";
         is >> c;
-        for(int j = 0; j < c; j++){
+        for(unsigned int j = 0; j < c; j++){
             unsigned int d;
+            //qDebug() << "Destination #" << j << "\n";
             is >> d;
-            graph->connectVertexes(graph->at(n), graph->at(d));
+            graph.connectVertexes(graph.at(n), graph.at(d));
         }
     }
     return is;
