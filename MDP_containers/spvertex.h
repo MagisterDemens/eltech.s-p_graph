@@ -33,8 +33,8 @@ class SPVertex
     std::list<SPVertex<T>*> m_in;
     std::list<SPVertex<T>*> m_out;
 
-    /*void setBond(std::list<SPVertex<T>*> list, bool out = false);
-    std::list<SPVertex<T>*> getBond(bool out = false);*/
+    void setBond(std::list<SPVertex<T>*> list, bool out = false);
+    std::list<SPVertex<T>*> getBond(bool out = false);
     void clearBond(bool out = false);
     void addBondVertex(SPVertex<T>* vertex, bool out = false);
     void deleteBondVertex(SPVertex<T>* vertex, bool out = false);
@@ -43,13 +43,13 @@ public:
     SPVertex(T data);
 
     void setData(T data);
-    T getData();
+    T getData() const;
 
-    size_t bondCount(bool out = false);
-    VertexBondType BondType();
-
+    size_t bondCount(bool out = false) const;
+    VertexBondType BondType() const;
+/*
     void setBond(std::list<SPVertex<T>*> list, bool out = false);
-    std::list<SPVertex<T>*> getBond(bool out = false);
+    std::list<SPVertex<T>*> getBond(bool out = false);*/
 
     template<typename I>
     friend std::ostream& operator << (std::ostream& os, const SPVertex<I>* vertex);
@@ -157,13 +157,13 @@ void SPVertex<T>::setData(T data)
 }
 
 template<typename T>
-T SPVertex<T>::getData()
+T SPVertex<T>::getData() const
 {
     return m_data;
 }
 
 template<typename T>
-size_t SPVertex<T>::bondCount(bool out)
+size_t SPVertex<T>::bondCount(bool out) const
 {
     if(out){
         return m_out.size();
@@ -174,7 +174,7 @@ size_t SPVertex<T>::bondCount(bool out)
 }
 
 template<typename T>
-VertexBondType SPVertex<T>::BondType()
+VertexBondType SPVertex<T>::BondType() const
 {
     size_t in_size = m_in.size();
     size_t out_size = m_out.size();

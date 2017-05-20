@@ -10,6 +10,7 @@
 #include<list>
 #include<algorithm>
 #include<iterator>
+#include<sstream>
 
 namespace spg {
 
@@ -24,10 +25,11 @@ class SPGraph
     SPGraphAllocator<T> allocator;
 
     SPGraph();
-    //SPVertex<T>* createVertex(std::iterator pos, T data);
+    void createVertex(T data);
     void deleteVertexWithoutMerge(SPVertex<T>* vertex);
     void deleteVertexWithMerge(SPVertex<T>* vertex);
     void insertVertex(SPVertex<T>* old_v, SPVertex<T>* new_v, bool after = false);
+    void connectVertexes(SPVertex<T>* v1, SPVertex<T>* v2);
 public:
     SPGraph(T data);
     SPGraph(T in_data, T out_data);
@@ -39,9 +41,13 @@ public:
     SPGraphIterator<T> begin();
     SPGraphIterator<T> end();
 
-    size_t size();
-    unsigned int position(SPVertex<T>* vertex);
-    SPVertex<T>* at(unsigned int pos);
+    size_t size() const;
+    unsigned int position(SPVertex<T>* vertex) const;
+    SPVertex<T>* at(unsigned int pos) const;
+
+    std::vector<unsigned int> getVertexDestination(SPVertex<T>* vertex) const;
+
+    const char* SPGStruct() const;
 
     template<typename O>
     friend std::ostream& operator << (std::ostream& os, SPGraph<O>* graph);
@@ -57,12 +63,13 @@ SPGraph<T>::SPGraph()
 
 }
 
-/*template<typename T>
-SPVertex<T> *SPGraph<T>::createVertex(std::iterator pos, T data)
+template<typename T>
+void SPGraph<T>::createVertex(T data)
 {
-    SPVertex<T> vertex = allocator.newVertex(data);]
-    vertex_list.insert(pos, vertex);
-}*/
+    SPVertex<T> vertex = allocator.newVertex(data);
+    vertex_list.push_back(vertex);
+}
+
 
 template<typename T>
 void SPGraph<T>::deleteVertexWithoutMerge(SPVertex<T> *vertex)
@@ -131,8 +138,9 @@ void SPGraph<T>::insertVertex(SPVertex<T> *old_v, SPVertex<T> *new_v, bool after
     if(after){
         new_v->setBond(old_v->m_out, true);
         old_v->clearBond(true);
-        new_v->addBondVertex(old_v, false);
-        old_v->addBondVertex(new_v, true);
+        /*new_v->addBondVertex(old_v, false);
+        old_v->addBondVertex(new_v, true);*/
+        connectVertexes(old_v, new_v);
         for(auto i = new_v->m_out.begin(); i != new_v->m_out.end(); i++){
             SPVertex<T>* temp = *i;
             temp->deleteBondVertex(old_v, false);
@@ -142,8 +150,9 @@ void SPGraph<T>::insertVertex(SPVertex<T> *old_v, SPVertex<T> *new_v, bool after
     else{
         new_v->setBond(old_v->m_in, false);
         old_v->clearBond(false);
-        new_v->addBondVertex(old_v, true);
-        old_v->addBondVertex(new_v, false);
+        /*new_v->addBondVertex(old_v, true);
+        old_v->addBondVertex(new_v, false);*/
+        connectVertexes(new_v, old_v);
         for(auto i = new_v->m_in.begin(); i != new_v->m_in.end(); i++){
             SPVertex<T>* temp = *i;
             temp->deleteBondVertex(old_v, true);
@@ -151,6 +160,13 @@ void SPGraph<T>::insertVertex(SPVertex<T> *old_v, SPVertex<T> *new_v, bool after
         }
     }
 
+}
+
+template<typename T>
+void SPGraph<T>::connectVertexes(SPVertex<T> *v1, SPVertex<T> *v2)
+{
+    v1->addBondVertex(v2, true);
+    v2->addBondVertex(v1);
 }
 
 template<typename T>
@@ -162,8 +178,7 @@ SPGraph<T>::SPGraph(T data)
     vertex_list.push_back(in_v);
     vertex_list.push_back(out_v);
 
-    in_v.addBondVertex(out_v, true);
-    out_v.addBondVertex(in_v);
+    connectVertexes(in_v, out_v);
 }
 
 template<typename T>
@@ -175,8 +190,7 @@ SPGraph<T>::SPGraph(T in_data, T out_data)
     vertex_list.push_back(in_v);
     vertex_list.push_back(out_v);
 
-    in_v->addBondVertex(out_v, true);
-    out_v->addBondVertex(in_v);
+    connectVertexes(in_v, out_v);
 }
 
 template<typename T>
@@ -302,13 +316,13 @@ SPGraphIterator<T> SPGraph<T>::end()
 }
 
 template<typename T>
-size_t SPGraph<T>::size()
+size_t SPGraph<T>::size() const
 {
     return vertex_list.size();
 }
 
 template<typename T>
-unsigned int SPGraph<T>::position(SPVertex<T> *vertex)
+unsigned int SPGraph<T>::position(SPVertex<T> *vertex) const
 {
     unsigned int pos = 0;
 
@@ -322,7 +336,7 @@ unsigned int SPGraph<T>::position(SPVertex<T> *vertex)
 }
 
 template<typename T>
-SPVertex<T> *SPGraph<T>::at(unsigned int pos)
+SPVertex<T> *SPGraph<T>::at(unsigned int pos) const
 {
     if(pos >= vertex_list.size()){
         THROW_SPG_NULL_POINTER_EXCEPTION("Null pointer (position out of graph)");
@@ -332,6 +346,43 @@ SPVertex<T> *SPGraph<T>::at(unsigned int pos)
     auto i = vertex_list.begin();
     i += pos;
     return *i;
+}
+
+template<typename T>
+std::vector<unsigned int> SPGraph<T>::getVertexDestination(SPVertex<T> *vertex) const
+{
+    std::vector<unsigned int> destination;
+    std::list<SPVertex<T>*> out = vertex->getBond(true);
+    for(auto i = out.begin(); i != out.end(); i++){
+        destination.push_back(this->position(*i));
+    }
+
+    return destination;
+}
+
+template<typename T>
+const char *SPGraph<T>::SPGStruct() const
+{
+    std::ostringstream oss;
+
+    oss << this->size() << std::endl;
+
+    for(auto i = vertex_list.begin(); i != vertex_list.end(); i++){
+        SPVertex<T>* temp = *i;
+        oss << temp->getData() << std::endl;
+    }
+
+    for(auto i = vertex_list.begin(); i != vertex_list.end(); i++){
+        SPVertex<T>* temp = *i;
+        oss << this->position(temp) << " " << temp->bondCount(true);
+        std::vector<unsigned int> out = this->getVertexDestination(temp);
+        for(auto j = out.begin(); j != out.end(); j++){
+            oss << " " << *j;
+        }
+        oss << std::endl;
+    }
+
+    return oss.str().c_str();
 }
 
 template<typename T>

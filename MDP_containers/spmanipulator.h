@@ -28,45 +28,20 @@ template<typename T>
 std::ostream& operator<<(std::ostream &os, const SPGraphManipulator<T> &graph_manip)
 {
     size_t size = graph_manip.m_graph->size();
-    os << "Vertex count: " << size << std::endl;
+    os << "Number of vertices: " << size << std::endl;
     auto it = graph_manip.m_graph->begin();
     for(unsigned int j = 0; j < size; j++){
-        os << graph_manip.m_graph->position(*it) << ":\t" << *it << ";\tGoes to: ";
+        os << "#" << graph_manip.m_graph->position(*it) << "\tData: " << *it << "\n\tgoes to: ";
         SPVertex<T>* temp = *it;
-        std::list<SPVertex<T>*> temp_list = temp->getBond(true);
+        std::vector<unsigned int> temp_list = graph_manip.m_graph->getVertexDestination(temp);
         for(auto i = temp_list.begin(); i != temp_list.end(); i++){
-            os << graph_manip.m_graph->position(*i) << " ";
+            os << *i << " ";
         }
-        os << std::endl;
+        os << std::endl << std::endl;
         ++it;
     }
     return os;
 }
-
-/*
-template<typename T>
-class SPVertexManipulator{
-    SPVertex<T>* m_vertex;
-public:
-    SPVertexManipulator(SPVertex<T>* vertex)
-    {
-        m_vertex = vertex;
-    }
-
-    template<typename O>
-    friend std::ostream &operator<< (std::ostream& os, const SPVertexManipulator<O>& vertex_manip)
-    {
-        if(vertex_manip.m_vertex == NULL)
-        {
-            return os;
-        }
-
-        os << vertex_manip.m_vertex->m_data;
-
-        return os;
-    }
-};
-*/
 
 }
 

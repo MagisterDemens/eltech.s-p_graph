@@ -34,4 +34,5 @@ HEADERS  += mainwindow.h \
     spgraphallocator.h \
     spgraphiterator.h \
     spmanipulator.h \
-    spgexception.h
+    spgexception.h \
+    circuitelemdata.h
