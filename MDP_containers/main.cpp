@@ -8,8 +8,12 @@
 
 #include<QDebug>
 #include<fstream>
+#include<sstream>
+#include<iostream>
 
 using namespace spg;
+
+void output();
 
 int main(int argc, char *argv[])
 {
@@ -46,16 +50,20 @@ int main(int argc, char *argv[])
     std::cout << stru << std::endl << std::endl;
     */
 
-    SPGraph<CircuitElemData> graph;// = new SPGraph<CircuitElemData>(CircuitElemData(1,2,2));
-    std::ifstream in;
-    in.open("D:\\Univer\\MDP\\read.txt");
-    in >> graph;
-    in.close();
-    graph.SSPlit(graph.at(0), CircuitElemData(2,3,6));
-    std::ofstream out;
-    out.open("D:\\Univer\\MDP\\test.txt");
-    out << graph;
-    out.close();
+    output();
 
     return a.exec();    
+}
+
+void output(){
+    SPGraph<CircuitElemData> graph;
+    std::ifstream in;
+    in.open("D:\\Univer\\MDP\\read4.txt");
+    in >> graph;
+    in.close();
+    std::ofstream out;
+    out.open("D:\\Univer\\MDP\\test.txt");
+    out << graph.SPGStruct();
+    out.close();
+    std::cout << graph;
 }

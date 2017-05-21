@@ -38,10 +38,11 @@ std::ostream& operator<<(std::ostream &os, const SPGraphManipulator<T> &graph_ma
             os << *i << " ";
         }
         if(j != size-1){
-            os << "\n\n";
+            os << "\n\n" ;
         }
         //++it;
     }
+    os << std::flush;
     return os;
 }
 
