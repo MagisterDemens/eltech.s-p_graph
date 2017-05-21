@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include <QApplication>
 
+#include "tasksolver.h"
 #include"spgraph.h"
 #include"spgraphiterator.h"
 #include"circuitelemdata.h"
@@ -61,6 +62,8 @@ void output(){
     in.open("D:\\Univer\\MDP\\read4.txt");
     in >> graph;
     in.close();
+	TaskSolver *taskSolver = new TaskSolver();
+	taskSolver->solve(graph);
     std::ofstream out;
     out.open("D:\\Univer\\MDP\\test.txt");
     out << graph.SPGStruct();
