@@ -317,13 +317,13 @@ void SPGraph<T>::deleteVertex(SPVertex<T>* vertex)
 template<typename T>
 SPGraphIterator<T> SPGraph<T>::begin()
 {
-    return SPGraphIterator<T>(0, vertex_list);
+    return SPGraphIterator<T>(0, &vertex_list);
 }
 
 template<typename T>
 SPGraphIterator<T> SPGraph<T>::end()
 {
-    return SPGraphIterator<T>(vertex_list.size(), vertex_list);
+    return SPGraphIterator<T>(vertex_list.size(), &vertex_list);
 }
 
 template<typename T>
@@ -440,6 +440,7 @@ std::ostream& operator <<(std::ostream &os, const SPGraph<O>& graph)
 template<typename I>
 std::istream& operator >>(std::istream &is, SPGraph<I>& graph)
 {
+    graph.clear();
     //graph = new SPGraph<I>();
     unsigned int s;
     //qDebug() << "Read size\n";
