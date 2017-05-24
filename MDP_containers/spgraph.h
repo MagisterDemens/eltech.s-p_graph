@@ -273,6 +273,11 @@ void SPGraph<T>::deleteVertex(SPVertex<T>* vertex)
         return;
     }
 
+    if(vertex_list.size() == 2){
+        THROW_SPG_INCORRECT_OPEARTION_EXCEPTION("Cannot delete from graph with size = 2");
+        return;
+    }
+
     auto pos = std::find(vertex_list.begin(), vertex_list.end(), vertex);
 
     if(pos == vertex_list.end()){
@@ -421,8 +426,8 @@ void SPGraph<T>::clear()
 template<typename T>
 SPGraph<T>::~SPGraph()
 {
-    allocator.freAll();
-    vertex_list.clear();
+    /*allocator.freAll();
+    vertex_list.clear();*/
 }
 
 template<typename O>

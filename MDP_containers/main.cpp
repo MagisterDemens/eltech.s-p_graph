@@ -7,10 +7,11 @@
 #include"circuitelemdata.h"
 #include<iostream>
 
-#include<QDebug>
 #include<fstream>
 #include<sstream>
 #include<iostream>
+
+#include "tester.h"
 
 using namespace spg;
 
@@ -57,16 +58,19 @@ int main(int argc, char *argv[])
 }
 
 void output(){
-    SPGraph<CircuitElemData> graph;
+    /*SPGraph<CircuitElemData> graph;
     std::ifstream in;
     in.open("D:\\Univer\\MDP\\read4.txt");
     in >> graph;
     in.close();
-	TaskSolver *taskSolver = new TaskSolver();
-	taskSolver->solve(graph);
+    TaskSolver *taskSolver = new TaskSolver();
+    taskSolver->solve(graph);
     std::ofstream out;
     out.open("D:\\Univer\\MDP\\test.txt");
     out << graph.SPGStruct();
+    //std::string str = graph.SPGStruct();
     out.close();
-    std::cout << graph;
+    std::cout << graph;*/
+    Tester tester;
+    tester.RunTests();
 }
