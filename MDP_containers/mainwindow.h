@@ -1,11 +1,64 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QWidget>
+#include <QObject>
 #include <QMainWindow>
+#include <QGraphicsView>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QAction>
+#include <QToolBar>
+#include <QIcon>
+#include <QCloseEvent>
+#include <QStatusBar>
+#include <QCoreApplication>
+#include <QLineEdit>
+
+#include <iostream>
+#include <fstream>
+#include <sstream>
+
+#include "graphscene.h"
+#include "nodeitem.h"
+#include "spgraph.h"
+
+using namespace spg;
+
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
+    SPGraph<CircuitElemData> graph;
+
+    GraphScene* scene;
+    QGraphicsView* view;
+
+    QToolBar* fileToolBar;
+    QToolBar* mainToolBar;
+
+    QAction* addNodeParallel;
+    QAction* addNodeSeries;
+    QAction* deleteNode;
+    QAction* calculateGraph;
+    QAction* openFile;
+    QAction* saveFile;
+
+    QLineEdit* editR;
+
+    void createScene();
+    void createActions();
+    void createToolBars();
+    void createInitialGraph();
+
+private slots:
+
+    void itemInsertS();
+    void itemInsertP();
+    void itemDelet();
+    void calculate();
+    void openFileGraph();
+    void saveFileGraph();
 
 public:
     MainWindow(QWidget *parent = 0);
