@@ -105,8 +105,8 @@ void TaskSolver::systemSolution(SPGraph<CircuitElemData> &graph)
 			CircuitElemData newData(graph.at(j)->getData().getR(), amperance*graph.at(j)->getData().getR(), amperance);
 			graph.at(j)->setData(newData);
 		}
-		
 	}
+	graph.at(n-1)->setData(graph.at(0)->getData());
 }
 
 void TaskSolver::first_law_voltage(SPGraph<CircuitElemData> &graph, int &currentLine)
@@ -215,7 +215,6 @@ void TaskSolver::solve(SPGraph<CircuitElemData> &graph)
 		paths[i] = graph.getVertexDestination(graph.at(i), true);
 		back_paths[i] = graph.getVertexDestination(graph.at(i), false);
 		vertex_types[i] = graph.at(i)->BondType();
-
 	}
 	int currentLine = 0;
 	first_law_voltage(graph, currentLine);
