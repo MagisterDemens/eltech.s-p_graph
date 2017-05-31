@@ -12,16 +12,16 @@ template<typename T>
 class SPGraphIterator
 {
     std::list<SPVertex<T>*>* m_list;
-    size_t m_pos;
+    int m_pos;
     typename std::list<SPVertex<T>*>::iterator m_iterator;
 public:
     SPGraphIterator(const SPGraphIterator<T>& iterator);
-    SPGraphIterator(const size_t pos, std::list<SPVertex<T> *>* list);
+    SPGraphIterator(const int pos, std::list<SPVertex<T> *>* list);
     SPGraphIterator<T>& operator ++();
     SPGraphIterator<T>& operator ++(int o);
-    SPGraphIterator<T>& operator +=(const size_t o);
+    SPGraphIterator<T>& operator +=(const int o);
     SPGraphIterator<T>& operator --();
-    SPGraphIterator<T>& operator -=(const size_t o);
+    SPGraphIterator<T>& operator -=(const int o);
     bool operator ==(const SPGraphIterator<T> &other);
     bool operator !=(const SPGraphIterator<T> &other);
     SPVertex<T>* operator *();
@@ -38,12 +38,12 @@ SPGraphIterator<T>::SPGraphIterator(const SPGraphIterator<T> &iterator)
 }
 
 template<typename T>
-SPGraphIterator<T>::SPGraphIterator(const size_t pos, std::list<SPVertex<T> *> *list)
+SPGraphIterator<T>::SPGraphIterator(const int pos, std::list<SPVertex<T> *> *list)
 {
     m_list = list;
     m_iterator = m_list->begin();
     m_pos = pos;
-    for(size_t i = 0; i < m_pos; i++){
+    for(int i = 0; i < m_pos; i++){
         m_iterator++;
     }
 }
@@ -51,7 +51,8 @@ SPGraphIterator<T>::SPGraphIterator(const size_t pos, std::list<SPVertex<T> *> *
 template<typename T>
 SPGraphIterator<T>& SPGraphIterator<T>::operator ++()
 {
-    if(m_list->size() < m_pos+1){
+    int s = m_list->size();
+    if(s < m_pos+1){
         THROW_SPG_ITERATOR_EXCEPTION(this,"Increment is going out of bonds",T);
         return* this;
     }
@@ -64,7 +65,8 @@ SPGraphIterator<T>& SPGraphIterator<T>::operator ++()
 template<typename T>
 SPGraphIterator<T> &SPGraphIterator<T>::operator ++(int o)
 {
-    if(m_list->size() < m_pos+o){
+    int s = m_list->size();
+    if(s < m_pos+o){
         THROW_SPG_ITERATOR_EXCEPTION(this,"Increment is going out of bonds",T);
         return* this;
     }
@@ -75,15 +77,16 @@ SPGraphIterator<T> &SPGraphIterator<T>::operator ++(int o)
 }
 
 template<typename T>
-SPGraphIterator<T> &SPGraphIterator<T>::operator +=(const size_t o)
+SPGraphIterator<T> &SPGraphIterator<T>::operator +=(const int o)
 {
-    if(m_list.size() < m_pos+o){
+    int s = m_list->size();
+    if(s < m_pos+o){
         THROW_SPG_ITERATOR_EXCEPTION(this,"Increment is going out of bonds",T);
         return* this;
     }
 
     m_pos += o;
-    for(size_t i = 0; i < o; i++){
+    for(int i = 0; i < o; i++){
         m_iterator++;
     }
     return* this;
@@ -103,7 +106,7 @@ SPGraphIterator<T> &SPGraphIterator<T>::operator --()
 }
 
 template<typename T>
-SPGraphIterator<T> &SPGraphIterator<T>::operator -=(const size_t o)
+SPGraphIterator<T> &SPGraphIterator<T>::operator -=(const int o)
 {
     if(0 > m_pos-o){
         THROW_SPG_ITERATOR_EXCEPTION(this,"Decrement is going out of bonds",T);
@@ -111,7 +114,7 @@ SPGraphIterator<T> &SPGraphIterator<T>::operator -=(const size_t o)
     }
 
     m_pos -= o;
-    for(size_t i = 0; i < o; i++){
+    for(int i = 0; i < o; i++){
         m_iterator--;
     }
     return* this;

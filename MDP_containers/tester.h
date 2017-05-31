@@ -13,6 +13,8 @@ class Tester
     void UnitTest3();
     void UnitTest4();
     void UnitTest5();
+    void UnitTest6();
+    void UnitTest7();
 public:
     Tester(){}
     void RunTests();
@@ -178,6 +180,80 @@ void Tester::UnitTest5()
     graph.clear();
 }
 
+void Tester::UnitTest6()
+{
+    SPGraph<int> graph = SPGraph<int>(2);
+
+    std::cout << "Testing iterator exceptions\n";
+    auto it1 = graph.begin();
+    std::cout << "1\n";
+    try{
+        --it1;
+    }
+    catch(SPGException e){
+        std::cout << e.what();
+    }
+
+    std::cout << "3\n";
+    try{
+        it1 += 100;
+    }
+    catch(SPGException e){
+        std::cout << e.what();
+    }
+    std::cout << "4\n";
+    auto it2 = graph.end();
+    try{
+        ++it2;
+    }
+    catch(SPGException e){
+        std::cout << e.what();
+    }
+    std::cout << "5\n";
+    try{
+        it2++;
+    }
+    catch(SPGException e){
+        std::cout << e.what();
+    }
+    std::cout << "6\n";
+    try{
+        it2 -= 100;
+    }
+    catch(SPGException e){
+        std::cout << e.what();
+    }
+    std::cout << std::flush;
+
+    graph.clear();
+}
+
+void Tester::UnitTest7()
+{
+    std::cout << "Reading from file\n";
+    SPGraph<CircuitElemData> graph;
+    std::ifstream in;
+    in.open("D:\\Univer\\MDP\\test1.txt");
+    in >> graph;
+    in.close();
+    std::cout << graph << std::endl;
+
+    std::cout << "Show data with iterator (reverse)\n";
+    for(auto i = --graph.end(); i != graph.begin(); i -= 1){
+        SPVertex<CircuitElemData>* temp = *i;
+        std::cout << temp << std::endl;
+    }
+
+    std::cout << "Changing data with iteartor (reverse)\n";
+    for(auto i = --graph.end(); i != graph.begin(); --i){
+        SPVertex<CircuitElemData>* temp = *i;
+        temp->setData(CircuitElemData(9,9,9));
+    }
+
+    std::cout << graph << std::endl;
+    graph.clear();
+}
+
 void Tester::RunTests()
 {
     std::cout << "Test #1\n";
@@ -190,6 +266,10 @@ void Tester::RunTests()
     this->UnitTest4();
     std::cout << "Test #5\n";
     this->UnitTest5();
+    std::cout << "Test #6\n";
+    this->UnitTest6();
+    std::cout << "Test #7\n";
+    this->UnitTest7();
 }
 
 #endif // TESTER_H
