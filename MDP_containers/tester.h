@@ -194,6 +194,14 @@ void Tester::UnitTest6()
         std::cout << e.what();
     }
 
+    std::cout << "2\n";
+    try{
+        it1--;
+    }
+    catch(SPGException e){
+        std::cout << e.what();
+    }
+
     std::cout << "3\n";
     try{
         it1 += 100;
