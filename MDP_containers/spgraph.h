@@ -55,6 +55,8 @@ public:
 
     void clear();
 
+    bool checkInvariant();
+
     template<typename O>
     friend std::ostream& operator << (std::ostream& os, const SPGraph<O>& graph);
     template<typename I>
@@ -81,7 +83,7 @@ template<typename T>
 void SPGraph<T>::deleteVertexWithoutMerge(SPVertex<T> *vertex)
 {
     if(vertex == NULL){
-        THROW_SPG_NULL_POINTER_EXCEPTION("NULL pointer");
+        THROW_SPG_NULL_POINTER_EXCEPTION(this,"NULL pointer",T);
         return;
     }
 
@@ -107,7 +109,7 @@ template<typename T>
 void SPGraph<T>::deleteVertexWithMerge(SPVertex<T> *vertex)
 {
     if(vertex == NULL){
-        THROW_SPG_NULL_POINTER_EXCEPTION("NULL pointer");
+        THROW_SPG_NULL_POINTER_EXCEPTION(this,"NULL pointer",T);
         return;
     }
 
@@ -203,14 +205,14 @@ template<typename T>
 SPVertex<T> *SPGraph<T>::SSPlit(SPVertex<T> *vertex, T data, bool after)
 {
     if(vertex == NULL){
-        THROW_SPG_NULL_POINTER_EXCEPTION("NULL pointer");
+        THROW_SPG_NULL_POINTER_EXCEPTION(this,"NULL pointer",T);
         return NULL;
     }
 
     auto pos = std::find(vertex_list.begin(), vertex_list.end(), vertex);
 
     if(pos == vertex_list.end()){
-        THROW_SPG_NON_EXISTENT_VERTEX_EXCEPTION("Vertex is not exist in the graph");
+        THROW_SPG_NON_EXISTENT_VERTEX_EXCEPTION(this,"Vertex is not exist in the graph",T);
         return NULL;
     }
 
@@ -230,19 +232,19 @@ template<typename T>
 SPVertex<T> *SPGraph<T>::PSPlit(SPVertex<T> *vertex, T data)
 {
     if(vertex == NULL){
-        THROW_SPG_NULL_POINTER_EXCEPTION("Point on NULL");
+        THROW_SPG_NULL_POINTER_EXCEPTION(this,"Point on NULL",T);
         return NULL;
     }
 
     auto pos = std::find(vertex_list.begin(), vertex_list.end(), vertex);
 
     if(pos == vertex_list.end()){
-        THROW_SPG_NON_EXISTENT_VERTEX_EXCEPTION("Vertex is not exist in the graph");
+        THROW_SPG_NON_EXISTENT_VERTEX_EXCEPTION(this,"Vertex is not exist in the graph",T);
         return NULL;
     }
 
     if(vertex->BondType() != VertexBondType::VertexMidSingle){
-        THROW_SPG_INCORRECT_OPEARTION_EXCEPTION("Cannot add parallel connection to vertex without VertexMidSingle bond type");
+        THROW_SPG_INCORRECT_OPERATION_EXCEPTION(this, vertex,"Parallel adding","Cannot add parallel connection to vertex without VertexMidSingle bond type",T);
         return NULL;
     }
 
@@ -269,19 +271,19 @@ template<typename T>
 void SPGraph<T>::deleteVertex(SPVertex<T>* vertex)
 {
     if(vertex == NULL){
-        THROW_SPG_NULL_POINTER_EXCEPTION("NULL pointer");
+        THROW_SPG_NULL_POINTER_EXCEPTION(this,"Point on NULL",T);
         return;
     }
 
     if(vertex_list.size() == 2){
-        THROW_SPG_INCORRECT_OPEARTION_EXCEPTION("Cannot delete from graph with size = 2");
+        THROW_SPG_INCORRECT_OPERATION_EXCEPTION(this, vertex,"Deleting","Cannot delete from graph with size = 2",T);
         return;
     }
 
     auto pos = std::find(vertex_list.begin(), vertex_list.end(), vertex);
 
     if(pos == vertex_list.end()){
-        THROW_SPG_NON_EXISTENT_VERTEX_EXCEPTION("Vertex is not exist in the graph");
+        THROW_SPG_NON_EXISTENT_VERTEX_EXCEPTION(this,"Vertex is not exist in the graph",T);
         return;
     }
 
@@ -292,7 +294,7 @@ void SPGraph<T>::deleteVertex(SPVertex<T>* vertex)
     case VertexBondType::VertexMidFull:
     case VertexBondType::VertexStartFull:
     case VertexBondType::VertexNonCorrect:
-        THROW_SPG_INCORRECT_OPEARTION_EXCEPTION("Vertex bond type does not allow to delete it");
+        THROW_SPG_INCORRECT_OPERATION_EXCEPTION(this, vertex,"Deleting","Vertex bond type does not allow to delete it",T);
         break;
     case VertexBondType::VertexEndSingle:
     case VertexBondType::VertexStartSingle:
@@ -350,7 +352,7 @@ template<typename T>
 SPVertex<T> *SPGraph<T>::at(unsigned int pos) const
 {
     if(pos >= vertex_list.size()){
-        THROW_SPG_NULL_POINTER_EXCEPTION("Null pointer (position out of graph)");
+        THROW_SPG_NULL_POINTER_EXCEPTION(this, "Null pointer (position out of graph)",T);
         return NULL;
     }
 
@@ -371,7 +373,7 @@ std::vector<unsigned int> SPGraph<T>::getVertexDestination(SPVertex<T> *vertex, 
     auto pos = std::find(vertex_list.begin(), vertex_list.end(), vertex);
 
     if(pos == vertex_list.end()){
-        THROW_SPG_NULL_POINTER_EXCEPTION("Null pointer");
+        THROW_SPG_NULL_POINTER_EXCEPTION(this,"Null pointer",T);
         return destination;
     }
 
@@ -421,6 +423,28 @@ void SPGraph<T>::clear()
 {
     allocator.freAll();
     vertex_list.clear();
+}
+
+template<typename T>
+bool SPGraph<T>::checkInvariant()
+{
+    unsigned int out = 0;
+    unsigned int in = 0;
+
+    for(auto i = vertex_list.begin(); i != vertex_list.end(); i++){
+        SPVertex<T>* temp = *i;
+        if((*i) == NULL)
+            return false;
+
+        out += temp->bondCount(true);
+        in += temp->bondCount(false);
+    }
+
+    if(out != in){
+        return false;
+    }
+
+    return true;
 }
 
 template<typename T>

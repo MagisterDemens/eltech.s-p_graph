@@ -5,19 +5,19 @@
 #include<exception>
 #include<sstream>
 
-#include"spgraph.h"
+/*#include"spgraph.h"
 #include"spvertex.h"
+#include"spgraphiterator.h"*/
 
 namespace spg {
 
 #define THROW_SPG_EXCEPTION(s) throw SPGException(s , __LINE__, __FUNCTION__, __TIME__)
-#define THROW_SPG_NULL_POINTER_EXCEPTION(s) throw SPGNullPointerException(s , __LINE__, __FUNCTION__, __TIME__)
-#define THROW_SPG_INCORRECT_OPEARTION_EXCEPTION(s) throw SPGIncorrectOperationException(s , __LINE__, __FUNCTION__, __TIME__)
-#define THROW_SPG_NON_EXISTENT_VERTEX_EXCEPTION(s) throw SPGNonExistentVertexEXception(s , __LINE__, __FUNCTION__, __TIME__)
-#define THROW_SPG_ITERATOR_EXCEPTION(s) throw SPGIteratorException(s , __LINE__, __FUNCTION__, __TIME__)
-#define THROW_SPG_MANIPULATOR_EXCEPTION(s) throw SPGManipualtorException(s , __LINE__, __FUNCTION__, __TIME__)
-#define THROW_SPG_ALLOCATOR_EXCEPTION(s) throw SPGAllocatorException(s , __LINE__, __FUNCTION__, __TIME__)
-#define THROW_SPG_VERTEX_EXCEPTION(s) throw SPGVrtexException(s , __LINE__, __FUNCTION__, __TIME__)
+#define THROW_SPG_NULL_POINTER_EXCEPTION(g, s, T) throw SPGNullPointerException<T>(s , __LINE__, __FUNCTION__, __TIME__, g)
+#define THROW_SPG_INCORRECT_OPERATION_EXCEPTION(g,v,op,s, T) throw SPGIncorrectOperationException<T>(g,v,op,s , __LINE__, __FUNCTION__, __TIME__)
+#define THROW_SPG_NON_EXISTENT_VERTEX_EXCEPTION(g,s, T) throw SPGNonExistentVertexEXception<T>(g,s , __LINE__, __FUNCTION__, __TIME__)
+#define THROW_SPG_ITERATOR_EXCEPTION(i,s, T) throw SPGIteratorException<T>(i,s , __LINE__, __FUNCTION__, __TIME__)
+#define THROW_SPG_ALLOCATOR_EXCEPTION(v,s, T) throw SPGAllocatorException<T>(v,s , __LINE__, __FUNCTION__, __TIME__)
+#define THROW_SPG_VERTEX_EXCEPTION(v,s, T) throw SPGVertexException<T>(v,s , __LINE__, __FUNCTION__, __TIME__)
 
 class SPGException : public std::exception
 {
@@ -55,53 +55,87 @@ protected:
     std::string m_time;
 };
 
+template<typename T> class SPGraph;
+template<typename T> class SPVertex;
+template<typename T> class SPGraphIterator;
+
+template<typename T>
 class SPGNullPointerException : public SPGException
 {
+    const SPGraph<T>* m_g;
 public:
-    SPGNullPointerException(): SPGException(){}
-    SPGNullPointerException(std::string text, int line, std::string function, std::string time): SPGException(text, line, function, time){}
+    SPGNullPointerException(std::string text, int line, std::string function, std::string time, const SPGraph<T>* g = NULL): SPGException(text, line, function, time){
+        m_g = g;
+    }
+
+    const SPGraph<T>* getGraph(){return m_g;}
 };
 
-class SPGIncorrectOperationException : public SPGException
+template<typename T>
+class SPGIncorrectOperationException: public SPGException
 {
+    SPGraph<T>* m_g;
+    SPVertex<T>* m_v;
+    std::string m_op;
 public:
-    SPGIncorrectOperationException(): SPGException(){}
-    SPGIncorrectOperationException(std::string text, int line, std::string function, std::string time): SPGException(text, line, function, time){}
+    SPGIncorrectOperationException(SPGraph<T>* g, SPVertex<T>* v, std::string op ,std::string text, int line, std::string function, std::string time): SPGException(text, line, function, time){
+        m_g = g;
+        m_v = v;
+        m_op = op;
+    }
+
+    SPGraph<T>* getGraph(){ return m_g;}
+    SPVertex<T>* getVertex(){ return m_v;}
+    std::string getOp(){ return m_op;}
 };
 
+template<typename T>
 class SPGNonExistentVertexEXception : public SPGException
 {
+    SPGraph<T>* m_g;
 public:
-    SPGNonExistentVertexEXception(): SPGException(){}
-    SPGNonExistentVertexEXception(std::string text, int line, std::string function, std::string time): SPGException(text, line, function, time){}
+    SPGNonExistentVertexEXception(SPGraph<T>* g, std::string text, int line, std::string function, std::string time): SPGException(text, line, function, time){
+        m_g = g;
+    }
+
+    SPGraph<T>* getGraph(){ return m_g;}
 };
 
+template<typename T>
 class SPGIteratorException : public SPGException
 {
+    SPGraphIterator<T>* m_it;
 public:
-    SPGIteratorException(): SPGException(){}
-    SPGIteratorException(std::string text, int line, std::string function, std::string time): SPGException(text, line, function, time){}
+    SPGIteratorException(SPGraphIterator<T>* it, std::string text, int line, std::string function, std::string time): SPGException(text, line, function, time){
+        m_it = it;
+    }
+
+    SPGraphIterator<T>* getIterator(){ return m_it;}
 };
 
-class SPGManipualtorException : public SPGException
-{
-public:
-    SPGManipualtorException(): SPGException(){}
-    SPGManipualtorException(std::string text, int line, std::string function, std::string time): SPGException(text, line, function, time){}
-};
-
+template<typename T>
 class SPGAllocatorException : public SPGException
 {
+    SPVertex<T>* m_v;
 public:
-    SPGAllocatorException(): SPGException(){}
-    SPGAllocatorException(std::string text, int line, std::string function, std::string time): SPGException(text, line, function, time){}
+    SPGAllocatorException(SPVertex<T>* v, std::string text, int line, std::string function, std::string time): SPGException(text, line, function, time){
+        m_v = v;
+    }
+
+    SPVertex<T>* getVertex(){ return m_v;}
 };
 
-class SPGVrtexException : public SPGException
+
+template<typename T>
+class SPGVertexException: public SPGException
 {
+    SPVertex<T>* m_v;
 public:
-    SPGVrtexException(): SPGException(){}
-    SPGVrtexException(std::string text, int line, std::string function, std::string time): SPGException(text, line, function, time){}
+    SPGVertexException(SPVertex<T>* v, std::string text, int line, std::string function, std::string time): SPGException(text, line, function, time){
+        m_v = v;
+    }
+
+    SPVertex<T>* getVertex(){ return m_v;}
 };
 
 

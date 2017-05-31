@@ -33,7 +33,7 @@ void SPGraphAllocator<T>::freeVertex(SPVertex<T> *vertex)
 {
     auto pos = std::find(vertex_mem.begin(), vertex_mem.end(), vertex);
     if(pos == vertex_mem.end()){
-        THROW_SPG_ALLOCATOR_EXCEPTION("Cannot find vertex in memory pull");
+        THROW_SPG_ALLOCATOR_EXCEPTION(vertex,"Cannot find vertex in memory pull",T);
         return;
     }
     vertex_mem.erase(pos);
