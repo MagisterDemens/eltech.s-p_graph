@@ -41,3 +41,4 @@ NodeItem::NodeItem(SPVertex<CircuitElemData> *vertex, int x, int y, QGraphicsIte
 NodeItem::~NodeItem(){
 
 }
+

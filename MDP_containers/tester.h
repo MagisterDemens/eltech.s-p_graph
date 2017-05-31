@@ -1,7 +1,7 @@
 #ifndef TESTER_H
 #define TESTER_H
 
-#include "spgraph.h"
+#include "spgraphlib.h"
 #include "circuitelemdata.h"
 
 using namespace spg;

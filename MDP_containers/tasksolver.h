@@ -4,14 +4,12 @@
 #include <algorithm>
 #include <vector>
 
-#include "spgraph.h"
-#include"spgraphiterator.h"
-#include"circuitelemdata.h"
-
+/*#include "spgraph.h"
+#include "spgraphiterator.h"*/
+#include "circuitelemdata.h"
+#include "spgraphlib.h"
 using namespace std;
 using namespace spg;
-
-
 
 class TaskSolver
 {
@@ -30,7 +28,7 @@ public:
 	TaskSolver() {};
 	void solve(SPGraph<CircuitElemData> &graph);
 };
-
+/*
 
 double TaskSolver::det(vector<vector<double>> matrix)
 {
@@ -222,5 +220,5 @@ void TaskSolver::solve(SPGraph<CircuitElemData> &graph)
 	law_voltage(graph, currentLine);
 	systemSolution(graph);
 }
-
-#endif TASKSOLVER_H
+*/
+#endif //TASKSOLVER_H

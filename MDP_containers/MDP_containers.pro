@@ -26,7 +26,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    graphscene.cpp \
+    nodeitem.cpp \
+    tasksolver.cpp
 
 HEADERS  += mainwindow.h \
     spvertex.h \
@@ -37,4 +40,7 @@ HEADERS  += mainwindow.h \
     spgexception.h \
     circuitelemdata.h \
 	tasksolver.h \
-    tester.h
+    tester.h \
+    graphscene.h \
+    nodeitem.h \
+    spgraphlib.h

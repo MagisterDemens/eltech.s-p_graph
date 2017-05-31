@@ -5,6 +5,9 @@
 #include<exception>
 #include<sstream>
 
+#include"spgraph.h"
+#include"spvertex.h"
+
 namespace spg {
 
 #define THROW_SPG_EXCEPTION(s) throw SPGException(s , __LINE__, __FUNCTION__, __TIME__)
