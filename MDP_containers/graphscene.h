@@ -13,7 +13,6 @@ using namespace spg;
 
 class GraphScene : public QGraphicsScene
 {
-    std::list<NodeItem*> nodesList;
     int initX = 45;
     int initY = 45;
     int dist = 120;
@@ -25,7 +24,6 @@ public:
     void walkDrawGraph(SPGraph<CircuitElemData> graph, int x, int y, SPVertex<CircuitElemData>* vertex);
     void drawNode(NodeItem* node);
     void drawEdges(int x, int y, int x1, int y1);
-    void deleteNode(NodeItem* node);
 
 signals:
     void itemSelected(QGraphicsItem* item);

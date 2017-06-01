@@ -55,8 +55,14 @@ void MainWindow::createInitialGraph(){
 
 void MainWindow::itemDelete(){
     NodeItem* item = dynamic_cast<NodeItem*> (scene->selectedItems().at(0));
-    graph.deleteVertex(item->node);
-    scene->deleteNode(item);
+
+//    std::cout << "Normal" << std::endl;
+    scene->removeItem(item);
+    auto vertex = item->node;
+    delete item;
+    graph.deleteVertex(vertex);
+//    std::cout << "WOW" << std::flush;
+
     scene->drawGraph(graph);
 }
 
@@ -120,20 +126,36 @@ MainWindow::MainWindow(QWidget *parent)
     QHBoxLayout* workspace = new QHBoxLayout;
     workspace->setAlignment(Qt::AlignTop);
 
-    workspace->addWidget(view);
+    QHBoxLayout* circEditLayout = new QHBoxLayout;
 
     editR = new QLineEdit();
     editU = new QLineEdit();
     editI = new QLineEdit();
-    workspace->addWidget(editR);
-    workspace->addWidget(editU);
-    workspace->addWidget(editI);
+    circEditLayout->addWidget(editR);
+    circEditLayout->addWidget(editU);
+    circEditLayout->addWidget(editI);
+
+    editR->setPlaceholderText("R = ");
+    editU->setPlaceholderText("U = ");
+    editI->setPlaceholderText("I = ");
+
+    editR->setMaximumWidth(50);
+    editU->setMaximumWidth(50);
+    editI->setMaximumWidth(50);
 
     setCircuitData = new QPushButton();
-    workspace->addWidget(setCircuitData);
     connect(setCircuitData, SIGNAL(clicked()), this, SLOT(setIUR()));
 
+    setCircuitData->setText("Accept");
+
+    circEditLayout->addWidget(setCircuitData);
+
+    circEditLayout->setAlignment(Qt::AlignTop);
+    workspace->addItem(circEditLayout);
+
     centralLayout->addItem(workspace);
+
+    workspace->addWidget(view);
 
     QWidget* centre = new QWidget;
     centre->setLayout(centralLayout);
