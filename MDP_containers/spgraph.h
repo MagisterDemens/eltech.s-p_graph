@@ -116,6 +116,28 @@ void SPGraph<T>::deleteVertexWithMerge(SPVertex<T> *vertex)
     std::list<SPVertex<T>*> in_list = vertex->m_in;
     std::list<SPVertex<T>*> out_list = vertex->m_out;
 
+
+    for(auto i = in_list.begin(); i != in_list.end(); i++){
+        SPVertex<T>* temp = *i;
+        temp->clearBond(true);
+        temp->setBond(vertex->getBond(true), true);
+    }
+
+    for(auto i = out_list.begin(); i != out_list.end(); i++){
+        SPVertex<T>* temp = *i;
+        temp->clearBond(false);
+        temp->setBond(vertex->getBond(false), false);
+    }
+/*
+    for(auto i = in_list.begin(); i != in_list.end(); i++){
+        SPVertex<T>* temp1 = *i;
+        for(auto j = out_list.begin(); j != out_list.end(); i++){
+            SPVertex<T>* temp2 = *j;
+            temp1->addBondVertex(vertex, true);
+            temp2->addBondVertex(vertex);
+        }
+    }
+
     for(auto i = in_list.begin(); i != in_list.end(); i++){
         SPVertex<T>* temp = *i;
         temp->deleteBondVertex(vertex, true);
@@ -124,17 +146,9 @@ void SPGraph<T>::deleteVertexWithMerge(SPVertex<T> *vertex)
     for(auto i = out_list.begin(); i != out_list.end(); i++){
         SPVertex<T>* temp = *i;
         temp->deleteBondVertex(vertex);
-    }
-
-    for(auto i = in_list.begin(); i != in_list.end(); i++){
-        SPVertex<T>* temp1 = *i;
-        for(auto j = out_list.begin(); j != out_list.end(); i++){
-            SPVertex<T>* temp2 = *j;
-            temp1->addBondVertex(temp2, true);
-            temp2->addBondVertex(temp1);
-        }
-    }
-
+    }*/
+    vertex->clearBond(true);
+    vertex->clearBond();
     auto pos = std::find(vertex_list.begin(), vertex_list.end(), vertex);
     vertex_list.erase(pos);
     allocator.freeVertex(vertex);
