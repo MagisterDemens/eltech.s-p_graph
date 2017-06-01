@@ -24,6 +24,14 @@ void MainWindow::createActions(){
     saveFile = new QAction("Save", this);
     connect(saveFile, SIGNAL(triggered()),
             this, SLOT(saveFileGraph()));
+
+    newGraph = new QAction("New", this);
+    connect(newGraph, SIGNAL(triggered()),
+            this, SLOT(createInitGraph()));
+
+    showInfo = new QAction("Info", this);
+    connect(showInfo, SIGNAL(triggered()),
+            this, SLOT(showInfoWindow()));
 }
 
 void MainWindow::createToolBars(){
@@ -32,18 +40,49 @@ void MainWindow::createToolBars(){
     fileToolBar->addAction(saveFile);
 
     mainToolBar = addToolBar("Control");
+    mainToolBar->addAction(newGraph);
     mainToolBar->addAction(deleteNode);
     mainToolBar->addAction(addNodeParallel);
     mainToolBar->addAction(addNodeSeries);
     mainToolBar->addAction(calculateGraph);
+    mainToolBar->addAction(showInfo);
+
+    fileDialog = new QFileDialog();
+
+    saveFile->setEnabled(false);
+    deleteNode->setEnabled(false);
+    addNodeParallel->setEnabled(false);
+    addNodeSeries->setEnabled(false);
+    calculateGraph->setEnabled(false);
 }
 
 void MainWindow::createScene(){
     scene = new GraphScene();
-    scene->setSceneRect(0,0,500,500);
+    scene->setSceneRect(0,0,1500,1500);
 
     view = new QGraphicsView(this);
     view->setScene(scene);
+}
+
+void MainWindow::createLineEdits(){
+    editR = new QLineEdit();
+    editU = new QLineEdit();
+    editI = new QLineEdit();
+
+    editR->setPlaceholderText("R = ");
+    editU->setPlaceholderText("U = ");
+    editI->setPlaceholderText("I = ");
+
+    editR->setMaximumWidth(50);
+    editU->setMaximumWidth(50);
+    editI->setMaximumWidth(50);
+
+    setCircuitData = new QPushButton();
+    connect(setCircuitData, SIGNAL(clicked()), this, SLOT(setIUR()));
+
+    setCircuitData->setText("Accept");
+    setCircuitData->setMaximumWidth(50);
+    setCircuitData->setEnabled(false);
 }
 
 void MainWindow::createInitialGraph(){
@@ -55,14 +94,11 @@ void MainWindow::createInitialGraph(){
 
 void MainWindow::itemDelete(){
     NodeItem* item = dynamic_cast<NodeItem*> (scene->selectedItems().at(0));
-
-//    std::cout << "Normal" << std::endl;
     scene->removeItem(item);
     auto vertex = item->node;
+    scene->deleteNode(item);
     delete item;
     graph.deleteVertex(vertex);
-//    std::cout << "WOW" << std::flush;
-
     scene->drawGraph(graph);
 }
 
@@ -81,17 +117,30 @@ void MainWindow::itemInsertP(){
 }
 
 void MainWindow::openFileGraph(){
+    createInitialGraph();
+
+    QString filePath;
+    filePath = fileDialog->getOpenFileName();
     std::ifstream in;
-    in.open("D:\\read1.txt");
+    in.open(filePath.toStdString());
     in >> graph;
     in.close();
 
     scene->drawGraph(graph);
+
+    saveFile->setEnabled(true);
+    deleteNode->setEnabled(true);
+    addNodeParallel->setEnabled(true);
+    addNodeSeries->setEnabled(true);
+    calculateGraph->setEnabled(true);
+    setCircuitData->setEnabled(true);
 }
 
 void MainWindow::saveFileGraph(){
+    QString filePath;
+    filePath = fileDialog->getSaveFileName();
     std::ofstream out;
-    out.open("D:\\test.txt");
+    out.open(filePath.toStdString());
     out << graph.SPGStruct();
     out.close();
 }
@@ -113,12 +162,45 @@ void MainWindow::setIUR(){
     scene->drawGraph(graph);
 }
 
+void MainWindow::createInitGraph(){
+    CircuitElemData data = CircuitElemData();
+    graph = SPGraph<CircuitElemData>(data);
+
+    taskSolver = TaskSolver();
+
+    scene->drawGraph(graph);
+
+    saveFile->setEnabled(true);
+    deleteNode->setEnabled(true);
+    addNodeParallel->setEnabled(true);
+    addNodeSeries->setEnabled(true);
+    calculateGraph->setEnabled(true);
+    setCircuitData->setEnabled(true);
+}
+
+void MainWindow::showInfoWindow(){
+    QWidget *infoWindow = new QWidget;
+    infoWindow->setFixedWidth(400);
+    infoWindow->setFixedHeight(200);
+
+    QLabel* labelInfo = new QLabel("Система расчета однофазных электрических цепей.\nКонтейнер - параллельно-последовательный граф.\n\nАлексеевич\nБудчан\nЖангиров\nЧуланов\nСПбГЭТУ\n2017");
+
+    QVBoxLayout* mainLayout = new QVBoxLayout;
+    mainLayout->setAlignment(Qt::AlignCenter);
+    mainLayout->addWidget(labelInfo);
+
+    infoWindow->setLayout(mainLayout);
+
+    infoWindow->show();
+}
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent){
 
     createScene();
     createActions();
     createToolBars();
+    createLineEdits();
 
     QVBoxLayout* centralLayout = new QVBoxLayout;
     centralLayout->setAlignment(Qt::AlignLeft);
@@ -127,32 +209,24 @@ MainWindow::MainWindow(QWidget *parent)
     workspace->setAlignment(Qt::AlignTop);
 
     QHBoxLayout* circEditLayout = new QHBoxLayout;
+    circEditLayout->setAlignment(Qt::AlignLeft);
 
-    editR = new QLineEdit();
-    editU = new QLineEdit();
-    editI = new QLineEdit();
+    QLabel* labelR = new QLabel("Resistance: ");
+    labelR->setMaximumWidth(67);
+    QLabel* labelU = new QLabel("Voltage: ");
+    labelU->setMaximumWidth(57);
+    QLabel* labelI = new QLabel("Amperage: ");
+    labelI->setMaximumWidth(62);
+
+    circEditLayout->addWidget(labelR);
     circEditLayout->addWidget(editR);
+    circEditLayout->addWidget(labelU);
     circEditLayout->addWidget(editU);
+    circEditLayout->addWidget(labelI);
     circEditLayout->addWidget(editI);
-
-    editR->setPlaceholderText("R = ");
-    editU->setPlaceholderText("U = ");
-    editI->setPlaceholderText("I = ");
-
-    editR->setMaximumWidth(50);
-    editU->setMaximumWidth(50);
-    editI->setMaximumWidth(50);
-
-    setCircuitData = new QPushButton();
-    connect(setCircuitData, SIGNAL(clicked()), this, SLOT(setIUR()));
-
-    setCircuitData->setText("Accept");
-
     circEditLayout->addWidget(setCircuitData);
 
-    circEditLayout->setAlignment(Qt::AlignTop);
-    workspace->addItem(circEditLayout);
-
+    centralLayout->addItem(circEditLayout);
     centralLayout->addItem(workspace);
 
     workspace->addWidget(view);
@@ -161,8 +235,8 @@ MainWindow::MainWindow(QWidget *parent)
     centre->setLayout(centralLayout);
     setCentralWidget(centre);
 
-    createInitialGraph();
-    scene->drawGraph(graph);
+//    createInitialGraph();
+//    scene->drawGraph(graph);
 
     statusBar()->showMessage("Started correctly");
 }

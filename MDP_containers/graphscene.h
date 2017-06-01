@@ -16,6 +16,7 @@ class GraphScene : public QGraphicsScene
     int initX = 45;
     int initY = 45;
     int dist = 120;
+    std::list<NodeItem*> nodesList;
     Q_OBJECT
 public:
     GraphScene(QObject* parent = 0);
@@ -24,6 +25,7 @@ public:
     void walkDrawGraph(SPGraph<CircuitElemData> graph, int x, int y, SPVertex<CircuitElemData>* vertex);
     void drawNode(NodeItem* node);
     void drawEdges(int x, int y, int x1, int y1);
+    void deleteNode(NodeItem *node);
 
 signals:
     void itemSelected(QGraphicsItem* item);

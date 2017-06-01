@@ -1,10 +1,10 @@
 #include "nodeitem.h"
 
 NodeItem::NodeItem(SPVertex<CircuitElemData>* vertex, QGraphicsItem* parent)
-    :QGraphicsEllipseItem(parent)
+    :QGraphicsRectItem(parent)
 {
-    x = 0;
-    y = 0;
+    this->x = 0;
+    this->y = 0;
 
     node = vertex;
     this->setRect(-25,-25,50,50);
@@ -28,7 +28,7 @@ NodeItem::NodeItem(SPVertex<CircuitElemData>* vertex, QGraphicsItem* parent)
 }
 
 NodeItem::NodeItem(SPVertex<CircuitElemData> *vertex, int x, int y, QGraphicsItem* parent)
-    :QGraphicsEllipseItem(parent){
+    :QGraphicsRectItem(parent){
     this->x = x;
     this->y = y;
 

@@ -15,6 +15,8 @@
 #include <QCoreApplication>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QLabel>
+#include <QFileDialog>
 
 #include <iostream>
 #include <fstream>
@@ -37,6 +39,8 @@ class MainWindow : public QMainWindow
     GraphScene* scene;
     QGraphicsView* view;
 
+    QFileDialog* fileDialog;
+
     QToolBar* fileToolBar;
     QToolBar* mainToolBar;
 
@@ -46,6 +50,8 @@ class MainWindow : public QMainWindow
     QAction* calculateGraph;
     QAction* openFile;
     QAction* saveFile;
+    QAction* newGraph;
+    QAction* showInfo;
 
     QLineEdit* editR;
     QLineEdit* editU;
@@ -56,6 +62,7 @@ class MainWindow : public QMainWindow
     void createScene();
     void createActions();
     void createToolBars();
+    void createLineEdits();
     void createInitialGraph();
 
 private slots:
@@ -67,6 +74,8 @@ private slots:
     void openFileGraph();
     void saveFileGraph();
     void setIUR();
+    void createInitGraph();
+    void showInfoWindow();
 
 public:
     MainWindow(QWidget *parent = 0);

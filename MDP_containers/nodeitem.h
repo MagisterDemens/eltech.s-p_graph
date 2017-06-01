@@ -13,7 +13,7 @@
 
 using namespace spg;
 
-class NodeItem : public QGraphicsEllipseItem
+class NodeItem : public QGraphicsRectItem
 {
 
 public:
