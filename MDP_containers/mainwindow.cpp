@@ -3,7 +3,7 @@
 void MainWindow::createActions(){
     deleteNode = new QAction("Delete node", this);
     connect(deleteNode, SIGNAL(triggered()),
-            this, SLOT(itemDelet()));
+            this, SLOT(itemDelete()));
 
     addNodeParallel = new QAction("Add parallel", this);
     connect(addNodeParallel, SIGNAL(triggered()),
@@ -49,30 +49,32 @@ void MainWindow::createScene(){
 void MainWindow::createInitialGraph(){
     CircuitElemData data = CircuitElemData();
     graph = SPGraph<CircuitElemData>(data);
+
+    taskSolver = TaskSolver();
 }
 
-void MainWindow::itemDelet(){
-
+void MainWindow::itemDelete(){
+    NodeItem* item = dynamic_cast<NodeItem*> (scene->selectedItems().at(0));
+    graph.deleteVertex(item->node);
+    scene->deleteNode(item);
+    scene->drawGraph(graph);
 }
 
 void MainWindow::itemInsertS(){
     CircuitElemData data = CircuitElemData();
-
-    auto it1 = graph.begin();
-    graph.SSPlit(*it1, data);
+    NodeItem* item = dynamic_cast<NodeItem*> (scene->selectedItems().at(0));
+    graph.SSPlit(item->node, data);
     scene->drawGraph(graph);
 }
 
 void MainWindow::itemInsertP(){
     CircuitElemData data = CircuitElemData();
-
-    auto it1 = graph.at(1);
-    graph.PSPlit(it1, data);
+    NodeItem* item = dynamic_cast<NodeItem*> (scene->selectedItems().at(0));
+    graph.PSPlit(item->node, data);
     scene->drawGraph(graph);
 }
 
 void MainWindow::openFileGraph(){
-//    SPGraph<CircuitElemData> graphTemp;
     std::ifstream in;
     in.open("D:\\read1.txt");
     in >> graph;
@@ -89,7 +91,9 @@ void MainWindow::saveFileGraph(){
 }
 
 void MainWindow::calculate(){
+    taskSolver.solve(graph);
 
+    scene->drawGraph(graph);
 }
 
 MainWindow::MainWindow(QWidget *parent)

@@ -14,12 +14,21 @@ NodeItem::NodeItem(SPVertex<CircuitElemData>* vertex, QGraphicsItem* parent)
     setFlag(QGraphicsItem::ItemIsSelectable, true);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
 
-    QString data = QString("U= ");
+    QString data = QString("I= ");
     data.append(QString::number(
-                     vertex->getData().getU()));
+                    vertex->getData().getI()));
+    data.append(QString("\nU= "));
+    data.append(QString::number(
+                    vertex->getData().getU()));
+    data.append(QString("\nR= "));
+    data.append(QString::number(
+                    vertex->getData().getR()));
+
     text = new QGraphicsTextItem(data, this);
 }
-NodeItem::NodeItem(SPVertex<CircuitElemData> *vertex, int x, int y, QGraphicsItem* parent){
+
+NodeItem::NodeItem(SPVertex<CircuitElemData> *vertex, int x, int y, QGraphicsItem* parent)
+    :QGraphicsEllipseItem(parent){
     this->x = x;
     this->y = y;
 
@@ -31,11 +40,17 @@ NodeItem::NodeItem(SPVertex<CircuitElemData> *vertex, int x, int y, QGraphicsIte
     setFlag(QGraphicsItem::ItemIsSelectable, true);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
 
-    QString data = QString("U= ");
+    QString data = QString("I= ");
     data.append(QString::number(
-                     vertex->getData().getU()));
+                    vertex->getData().getI()));
+    data.append(QString("\nU= "));
+    data.append(QString::number(
+                    vertex->getData().getU()));
+    data.append(QString("\nR= "));
+    data.append(QString::number(
+                    vertex->getData().getR()));
     text = new QGraphicsTextItem(data, this);
-
+    text->setPos(-25,-25);
 }
 
 NodeItem::~NodeItem(){

@@ -10,35 +10,58 @@ GraphScene::~GraphScene(){
 }
 
 void GraphScene::drawNode(NodeItem* node){
-    //NodeItem* item = new NodeItem(node, x, y);
     addItem(node);
     node->setPos(node->x, node->y);
-
-    //nodesList.insert(nodesList.end(), item);
 
     emit itemInserted(node);
 }
 
 void GraphScene::drawGraph(SPGraph<CircuitElemData> graph){
     GraphScene::clear();
+    nodesList.clear();
 
-    for(int i = 0; i < graph.size(); i++){
-        NodeItem* item = new NodeItem(graph.at(i), i*40, i*40);
+    //рисование нулевой вершины
+    NodeItem* startNode = new NodeItem(*graph.begin(), initX, initY);
+    nodesList.insert(nodesList.end(), startNode);
+    drawNode(startNode);
+    //все потомки нулевой вершины
+    std::vector<unsigned int> destinations = graph.getVertexDestination(*graph.begin(), true);
+
+    unsigned int y = 0;
+    foreach(unsigned int i, destinations){
+        //рисование параллельных вершин. Все вершины лежать на dist правее и различаются по высоте
+        NodeItem* item = new NodeItem(graph.at(i), initX+dist, initY+dist*y);
+//        std::cout << i << 1 << y << std::endl;
         nodesList.insert(nodesList.end(), item);
         drawNode(item);
+        drawEdges(0, 0, 1, y);
+        walkDrawGraph(graph, 2, y, graph.at(i));
+        y++;
     }
-    QGraphicsLineItem* item = new QGraphicsLineItem(0,0,60,60);
-    item->setPen(QPen(Qt::black, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-    item->setZValue(-1000);
-    addItem(item);
+//    std::cout << "Draw finished" << std::endl;
 }
 
-void GraphScene::drawEdges(SPGraph<CircuitElemData>* graph){
-    foreach(NodeItem* pair, nodesList){
-        std::vector<unsigned int> destinations = graph->getVertexDestination(pair->node);
-        foreach(unsigned int i, destinations){
-            //drawLine( , )
-        }
+void GraphScene::walkDrawGraph(SPGraph<CircuitElemData> graph, int x, int y, SPVertex<CircuitElemData> *vertex){
+    std::vector<unsigned int> destinations = graph.getVertexDestination(vertex, true);
+    unsigned int yN = y;
+    foreach(unsigned int i, destinations){
+        NodeItem* item = new NodeItem(graph.at(i), initX+dist*x, initY+dist*yN);
+        nodesList.insert(nodesList.end(), item);
+//        std::cout << i << x << yN << std::endl;
+        drawNode(item);
+        drawEdges(x-1, y, x, yN);
+        walkDrawGraph(graph, x+1, yN, graph.at(i));
+        yN++;
     }
 }
 
+void GraphScene::drawEdges(int x, int y, int x1, int y1){
+    QGraphicsLineItem* line = new QGraphicsLineItem(initX+dist*x, initY+dist*y, initX+dist*x1, initY+dist*y1);
+    line->setPen(QPen(Qt::black, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    line->setZValue(-10);
+    addItem(line);
+}
+
+void GraphScene::deleteNode(NodeItem *node){
+    nodesList.remove(node);
+}

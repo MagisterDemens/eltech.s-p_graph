@@ -106,7 +106,7 @@ void Tester::UnitTest4()
     std::cout << "Reading from file\n";
     SPGraph<CircuitElemData> graph;
     std::ifstream in;
-    in.open("D:\\Univer\\MDP\\test1.txt");
+    in.open("D:\\test1.txt");
     in >> graph;
     in.close();
     std::cout << graph << std::endl;
@@ -159,7 +159,7 @@ void Tester::UnitTest5()
     std::cout << "Reading from file\n";
     SPGraph<CircuitElemData> graph;
     std::ifstream in;
-    in.open("D:\\Univer\\MDP\\test1.txt");
+    in.open("D:\\test1.txt");
     in >> graph;
     in.close();
     std::cout << graph << std::endl;
@@ -241,7 +241,7 @@ void Tester::UnitTest7()
     std::cout << "Reading from file\n";
     SPGraph<CircuitElemData> graph;
     std::ifstream in;
-    in.open("D:\\Univer\\MDP\\test1.txt");
+    in.open("D:\\test1.txt");
     in >> graph;
     in.close();
     std::cout << graph << std::endl;

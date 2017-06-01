@@ -31,6 +31,7 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
     SPGraph<CircuitElemData> graph;
+    TaskSolver taskSolver;
 
     GraphScene* scene;
     QGraphicsView* view;
@@ -56,7 +57,7 @@ private slots:
 
     void itemInsertS();
     void itemInsertP();
-    void itemDelet();
+    void itemDelete();
     void calculate();
     void openFileGraph();
     void saveFileGraph();
