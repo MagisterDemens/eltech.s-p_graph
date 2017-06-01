@@ -96,6 +96,17 @@ void MainWindow::calculate(){
     scene->drawGraph(graph);
 }
 
+void MainWindow::setIUR(){
+    QString R = editR->text();
+    QString U = editU->text();
+    QString I = editI->text();
+
+    NodeItem* item = dynamic_cast<NodeItem*> (scene->selectedItems().at(0));
+    CircuitElemData data = CircuitElemData(R.toDouble(), U.toDouble(), I.toDouble());
+    item->node->setData(data);
+    scene->drawGraph(graph);
+}
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent){
 
@@ -110,8 +121,17 @@ MainWindow::MainWindow(QWidget *parent)
     workspace->setAlignment(Qt::AlignTop);
 
     workspace->addWidget(view);
+
     editR = new QLineEdit();
-    //workspace->addWidget(editR);
+    editU = new QLineEdit();
+    editI = new QLineEdit();
+    workspace->addWidget(editR);
+    workspace->addWidget(editU);
+    workspace->addWidget(editI);
+
+    setCircuitData = new QPushButton();
+    workspace->addWidget(setCircuitData);
+    connect(setCircuitData, SIGNAL(clicked()), this, SLOT(setIUR()));
 
     centralLayout->addItem(workspace);
 

@@ -14,6 +14,7 @@
 #include <QStatusBar>
 #include <QCoreApplication>
 #include <QLineEdit>
+#include <QPushButton>
 
 #include <iostream>
 #include <fstream>
@@ -47,6 +48,10 @@ class MainWindow : public QMainWindow
     QAction* saveFile;
 
     QLineEdit* editR;
+    QLineEdit* editU;
+    QLineEdit* editI;
+
+    QPushButton* setCircuitData;
 
     void createScene();
     void createActions();
@@ -61,10 +66,12 @@ private slots:
     void calculate();
     void openFileGraph();
     void saveFileGraph();
+    void setIUR();
 
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
 };
 
 #endif // MAINWINDOW_H
