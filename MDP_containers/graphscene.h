@@ -16,7 +16,8 @@ class GraphScene : public QGraphicsScene
     int initX = 45;
     int initY = 45;
     int dist = 120;
-    std::list<NodeItem*> nodesList;
+    std::vector<NodeItem*> nodesList;
+    QSet<int> notNodes;
     Q_OBJECT
 public:
     GraphScene(QObject* parent = 0);

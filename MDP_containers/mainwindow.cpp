@@ -126,14 +126,16 @@ void MainWindow::openFileGraph(){
     in >> graph;
     in.close();
 
-    scene->drawGraph(graph);
-
     saveFile->setEnabled(true);
     deleteNode->setEnabled(true);
     addNodeParallel->setEnabled(true);
     addNodeSeries->setEnabled(true);
     calculateGraph->setEnabled(true);
     setCircuitData->setEnabled(true);
+
+    scene->drawGraph(graph);
+
+
 }
 
 void MainWindow::saveFileGraph(){
@@ -168,14 +170,16 @@ void MainWindow::createInitGraph(){
 
     taskSolver = TaskSolver();
 
-    scene->drawGraph(graph);
-
     saveFile->setEnabled(true);
     deleteNode->setEnabled(true);
     addNodeParallel->setEnabled(true);
     addNodeSeries->setEnabled(true);
     calculateGraph->setEnabled(true);
     setCircuitData->setEnabled(true);
+
+    scene->drawGraph(graph);
+
+
 }
 
 void MainWindow::showInfoWindow(){
