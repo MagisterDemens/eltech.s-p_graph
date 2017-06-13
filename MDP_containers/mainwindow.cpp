@@ -93,58 +93,91 @@ void MainWindow::createInitialGraph(){
 }
 
 void MainWindow::itemDelete(){
-    NodeItem* item = dynamic_cast<NodeItem*> (scene->selectedItems().at(0));
-    scene->removeItem(item);
-    auto vertex = item->node;
-    scene->deleteNode(item);
-    delete item;
-    graph.deleteVertex(vertex);
-    scene->drawGraph(graph);
+    try{
+        if(scene->selectedItems().empty()){
+            return;
+        }
+        NodeItem* item = dynamic_cast<NodeItem*> (scene->selectedItems().at(0));
+        scene->removeItem(item);
+        auto vertex = item->node;
+        scene->deleteNode(item);
+        delete item;
+        graph.deleteVertex(vertex);
+        scene->drawGraph(graph);
+    }catch(exception e){
+        return;
+    }
+
 }
 
 void MainWindow::itemInsertS(){
-    CircuitElemData data = CircuitElemData();
-    NodeItem* item = dynamic_cast<NodeItem*> (scene->selectedItems().at(0));
-    graph.SSPlit(item->node, data);
-    scene->drawGraph(graph);
+    try{
+        if(scene->selectedItems().empty()){
+            return;
+        }
+        CircuitElemData data = CircuitElemData();
+        NodeItem* item = dynamic_cast<NodeItem*> (scene->selectedItems().at(0));
+        graph.SSPlit(item->node, data);
+        scene->drawGraph(graph);
+    }catch(exception e){
+
+    }
+
 }
 
 void MainWindow::itemInsertP(){
-    CircuitElemData data = CircuitElemData();
-    NodeItem* item = dynamic_cast<NodeItem*> (scene->selectedItems().at(0));
-    graph.PSPlit(item->node, data);
-    scene->drawGraph(graph);
+    try{
+        if(scene->selectedItems().empty()){
+            return;
+        }
+        CircuitElemData data = CircuitElemData();
+        NodeItem* item = dynamic_cast<NodeItem*> (scene->selectedItems().at(0));
+        graph.PSPlit(item->node, data);
+        scene->drawGraph(graph);
+    }catch(exception e){
+
+    }
+
 }
 
 void MainWindow::openFileGraph(){
-    createInitialGraph();
+    try{
+        createInitialGraph();
 
-    QString filePath;
-    filePath = fileDialog->getOpenFileName();
-    std::ifstream in;
-    in.open(filePath.toStdString());
-    in >> graph;
-    in.close();
+        QString filePath;
+        filePath = fileDialog->getOpenFileName();
+        std::ifstream in;
+        in.open(filePath.toStdString());
+        in >> graph;
+        in.close();
 
-    saveFile->setEnabled(true);
-    deleteNode->setEnabled(true);
-    addNodeParallel->setEnabled(true);
-    addNodeSeries->setEnabled(true);
-    calculateGraph->setEnabled(true);
-    setCircuitData->setEnabled(true);
+        saveFile->setEnabled(true);
+        deleteNode->setEnabled(true);
+        addNodeParallel->setEnabled(true);
+        addNodeSeries->setEnabled(true);
+        calculateGraph->setEnabled(true);
+        setCircuitData->setEnabled(true);
 
-    scene->drawGraph(graph);
+        scene->drawGraph(graph);
+    }catch(exception e){
+
+    }
 
 
 }
 
 void MainWindow::saveFileGraph(){
-    QString filePath;
-    filePath = fileDialog->getSaveFileName();
-    std::ofstream out;
-    out.open(filePath.toStdString());
-    out << graph.SPGStruct();
-    out.close();
+    try{
+        QString filePath;
+        filePath = fileDialog->getSaveFileName();
+        std::ofstream out;
+        out.open(filePath.toStdString());
+        out << graph.SPGStruct();
+        out.close();
+    }catch(exception e){
+
+    }
+
 }
 
 void MainWindow::calculate(){
@@ -154,14 +187,22 @@ void MainWindow::calculate(){
 }
 
 void MainWindow::setIUR(){
-    QString R = editR->text();
-    QString U = editU->text();
-    QString I = editI->text();
+    try{
+        if(scene->selectedItems().empty()){
+            return;
+        }
+        QString R = editR->text();
+        QString U = editU->text();
+        QString I = editI->text();
 
-    NodeItem* item = dynamic_cast<NodeItem*> (scene->selectedItems().at(0));
-    CircuitElemData data = CircuitElemData(R.toDouble(), U.toDouble(), I.toDouble());
-    item->node->setData(data);
-    scene->drawGraph(graph);
+        NodeItem* item = dynamic_cast<NodeItem*> (scene->selectedItems().at(0));
+        CircuitElemData data = CircuitElemData(R.toDouble(), U.toDouble(), I.toDouble());
+        item->node->setData(data);
+        scene->drawGraph(graph);
+    }catch(exception e){
+
+    }
+
 }
 
 void MainWindow::createInitGraph(){
@@ -178,7 +219,6 @@ void MainWindow::createInitGraph(){
     setCircuitData->setEnabled(true);
 
     scene->drawGraph(graph);
-
 
 }
 
